@@ -6,7 +6,7 @@
     <title>Login - Presensi MA Al-Huda</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-emerald-50 via-slate-50 to-emerald-100 flex items-center justify-center min-h-screen p-4">
+<body class="bg-linear-to-br from-emerald-50 via-slate-50 to-emerald-100 flex items-center justify-center min-h-screen p-4">
 
     <div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-emerald-100 p-8">
         {{-- Header Logo & Nama Lembaga --}}
