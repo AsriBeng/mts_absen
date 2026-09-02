@@ -36,7 +36,7 @@ class AuthController extends Controller
                 return redirect()->intended('/admin/dashboard');
             }
 
-            return redirect()->intended('/user/absen');
+            return redirect()->intended('/guru/dashboard');
         }
 
         // Jika Gagal Login
