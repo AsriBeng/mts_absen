@@ -94,14 +94,20 @@
                  class="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 text-slate-700"
                  style="display: none;">
 
+                 @php
+                    $roleName = strtolower(Auth::user()->role->name ?? 'guru');
+                    $profileRoute = $roleName === 'admin' ? route('admin.profile') : route('guru.profile');
+                    $settingRoute = $roleName === 'admin' ? route('admin.setting') : route('guru.setting');
+                @endphp
+
                 {{-- Item Profil --}}
-                <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium hover:bg-slate-50 hover:text-emerald-600 transition">
+                <a href="{{ $profileRoute }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium hover:bg-slate-50 hover:text-emerald-600 transition">
                     <i class="far fa-user text-base w-5 text-center text-slate-400"></i>
                     <span>Profil</span>
                 </a>
 
                 {{-- Item Pengaturan --}}
-                <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium hover:bg-slate-50 hover:text-emerald-600 transition">
+                <a href="{{ $settingRoute }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium hover:bg-slate-50 hover:text-emerald-600 transition">
                     <i class="fas fa-cog text-base w-5 text-center text-slate-400"></i>
                     <span>Pengaturan</span>
                 </a>

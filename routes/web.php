@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\DaySettingController;
 use App\Http\Controllers\Guru\GuruController;
 use App\Http\Controllers\Guru\AbsenSayaController;
 
+use App\Http\Controllers\ProfileController;
+
 Route::get('/', function () {
     // 1. Jika pengguna belum login, arahkan ke halaman login
     if (!Auth::check()) {
@@ -49,10 +51,26 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/days', [DaySettingController::class, 'store'])->name('admin.days.store');
     Route::put('/admin/days/{id}', [DaySettingController::class, 'update'])->name('admin.days.update');
     Route::delete('/admin/days/{id}', [DaySettingController::class, 'destroy'])->name('admin.days.destroy');
-    // Route Guru
+
     // Route Guru
     Route::get('/guru/dashboard', [GuruController::class, 'index'])->name('guru.dashboard');
     Route::get('/guru/absen-saya', [AbsenSayaController::class, 'index'])->name('guru.absen_saya');
     Route::post('/guru/absen-saya/scan', [AbsenSayaController::class, 'storeScan'])->name('guru.absen_saya.scan');
     Route::get('/guru/absen-saya/export-pdf', [AbsenSayaController::class, 'exportPdf'])->name('guru.absen_saya.export_pdf');
+
+    // Rute Profil & Setting Sisi Admin
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile');
+        Route::get('/setting', [ProfileController::class, 'showSetting'])->name('setting');
+        Route::put('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
+        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    });
+
+    // Rute Profil & Setting Sisi Guru
+    Route::prefix('guru')->name('guru.')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile');
+        Route::get('/setting', [ProfileController::class, 'showSetting'])->name('setting');
+        Route::put('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
+        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    });
 });
