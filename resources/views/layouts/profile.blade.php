@@ -141,24 +141,9 @@
                         </div>
 
                         <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-                            <span class="text-slate-400 uppercase font-semibold text-[10px] tracking-wider block">Nomor
-                                Induk Pegawai (NIP)</span>
-                            <p class="font-bold text-slate-800 text-sm font-mono mt-0.5">
-                                {{ Auth::user()->nip ?? 'Belum Diatur' }}
-                            </p>
-                        </div>
-
-                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
                             <span class="text-slate-400 uppercase font-semibold text-[10px] tracking-wider block">Alamat
                                 Email</span>
                             <p class="font-bold text-slate-800 text-sm mt-0.5">{{ Auth::user()->email }}</p>
-                        </div>
-
-                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-                            <span class="text-slate-400 uppercase font-semibold text-[10px] tracking-wider block">Nomor HP /
-                                WhatsApp</span>
-                            <p class="font-bold text-slate-800 text-sm mt-0.5">{{ Auth::user()->phone ?? 'Belum Diatur' }}
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -173,8 +158,8 @@
                     <div>
                         <h5 class="font-bold text-amber-900 text-sm mb-1">Pengingat Keamanan Akun</h5>
                         <p class="leading-relaxed text-amber-800/90">
-                            Pastikan NIP, Email, dan No. HP selalu mutakhir untuk kebutuhan verifikasi presensi. Jika ingin
-                            mengganti password, silakan buka menu <strong>Pengaturan Keamanan</strong>.
+                            Pastikan Email, dan No. HP selalu mutakhir untuk kebutuhan verifikasi presensi. Jika ingin
+                            mengganti password, silakan buka menu <strong>Pengaturan</strong>.
                         </p>
                     </div>
                 </div>
@@ -238,21 +223,6 @@
                             </div>
                         </div>
 
-                        {{-- Input NIP --}}
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-                                Nomor Induk Pegawai (NIP)
-                            </label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                                    <i class="fas fa-id-badge"></i>
-                                </span>
-                                <input type="text" name="nip" value="{{ old('nip', Auth::user()->nip) }}"
-                                    placeholder="Contoh: 198501012010011001"
-                                    class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                            </div>
-                        </div>
-
                         {{-- Input Email --}}
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
@@ -264,21 +234,6 @@
                                 </span>
                                 <input type="email" name="email" value="{{ old('email', Auth::user()->email) }}"
                                     required
-                                    class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                            </div>
-                        </div>
-
-                        {{-- Input Nomor HP --}}
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-                                Nomor HP / WhatsApp
-                            </label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                                    <i class="fas fa-phone"></i>
-                                </span>
-                                <input type="text" name="phone" value="{{ old('phone', Auth::user()->phone) }}"
-                                    placeholder="Contoh: 081234567890"
                                     class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
                             </div>
                         </div>

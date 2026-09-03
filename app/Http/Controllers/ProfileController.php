@@ -31,16 +31,12 @@ class ProfileController extends Controller
      */
     public function updateProfile(Request $request)
     {
-        /** @var User $user */
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $request->validate([
             'name'  => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-        ], [
-            'name.required'  => 'Nama lengkap wajib diisi.',
-            'email.required' => 'Alamat email wajib diisi.',
-            'email.unique'   => 'Alamat email sudah digunakan oleh akun lain.',
         ]);
 
         $user->update([
