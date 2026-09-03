@@ -11,7 +11,7 @@
             <span class="whitespace-nowrap" x-show="!sidebarMinimized">Dashboard</span>
         </a>
 
-        <a href="#"
+        <a href="{{ url('/admin/absensi') }}"
            class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition text-emerald-100 hover:bg-emerald-800/60 hover:text-white">
             <i class="fas fa-qrcode text-lg w-6 text-center shrink-0"></i>
             <span class="whitespace-nowrap" x-show="!sidebarMinimized">Absensi</span>

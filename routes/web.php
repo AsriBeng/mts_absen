@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Guru\GuruController;
+use App\Http\Controllers\Admin\AbsensiController;
 
 Route::get('/', function () {
     // 1. Jika pengguna belum login, arahkan ke halaman login
@@ -27,9 +28,11 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::middleware(['auth'])->group(function () {
-    // Route Dashboard Admin
+    // Route Admin
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/absensi', [AbsensiController::class, 'index'])->name('admin.absensi');
+    Route::post('/admin/absensi/generate-key', [AbsensiController::class, 'generateKey'])->name('admin.absensi.generate');
 
-    // Route Dashboard Guru
+    // Route Guru
     Route::get('/guru/dashboard', [GuruController::class, 'index'])->name('guru.dashboard');
 });
