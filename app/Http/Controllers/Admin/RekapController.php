@@ -11,42 +11,38 @@ class RekapController extends Controller
 {
     public function index(Request $request)
     {
-        // Tangkap Filter (Default: harian)
-        $filterType = $request->get('filter_type', 'harian');
-        $selectedDate = $request->get('date', now()->toDateString());
+        // 1. Tangkap Parameter Filter (Default: Harian & Hari Ini)
+        $filterType    = $request->get('filter_type', 'harian');
+        $selectedDate  = $request->get('date', now()->toDateString());
         $selectedMonth = $request->get('month', date('m'));
-        $selectedYear = $request->get('year', date('Y'));
+        $selectedYear  = $request->get('year', date('Y'));
 
+        // 2. Query Utama dengan Eager Loading Relasi User/Guru
         $query = Absensi::with('user');
 
-        // Logika Filter Periode
+        // 3. Logika Filter Berdasarkan Periode
         if ($filterType === 'harian') {
             $query->whereDate('date', $selectedDate);
             $periodeText = Carbon::parse($selectedDate)->translatedFormat('d F Y');
-
         } elseif ($filterType === 'mingguan') {
-            // Ambil tanggal mulai dari input (default: tanggal hari ini)
             $startDate = Carbon::parse($selectedDate);
-
-            // Hitung tanggal akhir 7 hari ke depan (contoh: Senin s/d Minggu)
-            $endDate = $startDate->copy()->addDays(6);
+            $endDate   = $startDate->copy()->addDays(6);
 
             $query->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()]);
-            $periodeText = $startDate->format('d M Y') . ' - ' . $endDate->format('d M Y') . ' (7 Hari)';
-
+            $periodeText = $startDate->translatedFormat('d M Y') . ' - ' . $endDate->translatedFormat('d M Y') . ' (7 Hari)';
         } elseif ($filterType === 'tahunan') {
             $query->whereYear('date', $selectedYear);
             $periodeText = 'Tahun ' . $selectedYear;
-
         } else { // Bulanan
             $query->whereMonth('date', $selectedMonth)
-                  ->whereYear('date', $selectedYear);
+                ->whereYear('date', $selectedYear);
             $periodeText = Carbon::createFromDate($selectedYear, $selectedMonth, 1)->translatedFormat('F Y');
         }
 
-        $attendances = $query->orderBy('date', 'desc')->get();
+        // Ambil Data Absensi Berdasarkan Urutan Tanggal Terbaru
+        $attendances = $query->orderBy('date', 'desc')->latest()->get();
 
-        // Ringkasan Statistik Data Rekap
+        // 4. Hitung Statistik Ringkasan Seluruh Guru
         $stats = [
             'total_hadir'     => $attendances->where('status', 'hadir')->count(),
             'total_terlambat' => $attendances->where('status', 'terlambat')->count(),
@@ -54,6 +50,7 @@ class RekapController extends Controller
             'total_alpa'      => $attendances->where('status', 'alpa')->count(),
         ];
 
+        // 5. Kirim Semua Variabel ke View
         return view('app.admin.rekap', compact(
             'attendances',
             'filterType',

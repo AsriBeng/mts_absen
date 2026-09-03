@@ -31,7 +31,7 @@ class AbsensiController extends Controller
         AbsensiKey::query()->update(['is_active' => false]);
 
         // Buat kunci unik baru
-        $newKey = 'ALHUDA-' . rand(1000, 9999) . '-' . strtoupper(Str::random(8));
+        $newKey = 'ALHUDA-' . rand(1000, 9999) . '-' . strtoupper(Str::random(6));
 
         AbsensiKey::create([
             'key_code'  => $newKey,

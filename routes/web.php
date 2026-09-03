@@ -50,7 +50,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/admin/days/{id}', [DaySettingController::class, 'update'])->name('admin.days.update');
     Route::delete('/admin/days/{id}', [DaySettingController::class, 'destroy'])->name('admin.days.destroy');
     // Route Guru
+    // Route Guru
     Route::get('/guru/dashboard', [GuruController::class, 'index'])->name('guru.dashboard');
     Route::get('/guru/absen-saya', [AbsenSayaController::class, 'index'])->name('guru.absen_saya');
+    Route::post('/guru/absen-saya/scan', [AbsenSayaController::class, 'storeScan'])->name('guru.absen_saya.scan');
     Route::get('/guru/absen-saya/export-pdf', [AbsenSayaController::class, 'exportPdf'])->name('guru.absen_saya.export_pdf');
 });
