@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
 use App\Models\Absensi;
-use App\Models\AbsensiKey; // Sesuaikan dengan Model QR Key Anda
+use App\Models\AbsensiKey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -23,22 +23,25 @@ class AbsenSayaController extends Controller
         $data = $this->getAbsensiData($request);
         $user = Auth::user();
 
-        // Mengirim data ke view khusus cetak PDF
         return view('app.guru.absensaya_pdf', array_merge($data, ['user' => $user]));
     }
 
     /**
-     * Memproses Scan QR dan Upload Foto Selfie dari Guru
+     * Memproses Scan QR, Foto Selfie, dan Koordinat GPS
      */
     public function storeScan(Request $request)
     {
-        // 1. Validasi Input Form / Modal Scan
+        // 1. Validasi Input Form (QR, Selfie, dan Titik GPS)
         $request->validate([
-            'qr_code' => 'required|string',
-            'image'   => 'required|string', // String base64 dari kamera webcam/smartphone
+            'qr_code'   => 'required|string',
+            'image'     => 'required|string',
+            'latitude'  => 'required|string',
+            'longitude' => 'required|string',
         ], [
-            'qr_code.required' => 'Kode QR wajib di-scan!',
-            'image.required'   => 'Foto selfie wajib diambil!',
+            'qr_code.required'   => 'Kode QR wajib di-scan!',
+            'image.required'     => 'Foto selfie wajib diambil!',
+            'latitude.required'  => 'Titik lokasi GPS wajib diaktifkan!',
+            'longitude.required' => 'Titik lokasi GPS wajib diaktifkan!',
         ]);
 
         // 2. Validasi Kunci QR Code
@@ -50,8 +53,8 @@ class AbsenSayaController extends Controller
             return redirect()->back()->with('error', 'Kode QR tidak valid atau sudah kadaluarsa!');
         }
 
-        $userId    = Auth::id();
-        $today     = Carbon::today()->toDateString();
+        $userId      = Auth::id();
+        $today       = Carbon::today()->toDateString();
         $currentTime = Carbon::now()->toTimeString();
 
         // 3. Simpan Gambar Selfie (Base64 Decode)
@@ -77,11 +80,13 @@ class AbsenSayaController extends Controller
             $status = Carbon::now()->greaterThan($jamBatasHadir) ? 'terlambat' : 'hadir';
 
             Absensi::create([
-                'user_id'   => $userId,
-                'date'      => $today,
-                'time_in'   => $currentTime,
-                'status'    => $status,
-                'image_in'  => $imageName ? 'absensi/' . $imageName : null,
+                'user_id'      => $userId,
+                'date'         => $today,
+                'time_in'      => $currentTime,
+                'status'       => $status,
+                'image_in'     => $imageName ? 'absensi/' . $imageName : null,
+                'lat_in'       => $request->latitude,
+                'long_in'      => $request->longitude,
             ]);
 
             return redirect()->back()->with('success', 'Berhasil melakukan presensi masuk!');
@@ -91,10 +96,12 @@ class AbsenSayaController extends Controller
                 return redirect()->back()->with('error', 'Anda sudah melakukan presensi masuk dan pulang hari ini.');
             }
 
-            // Update Jam Pulang
+            // Update Jam Pulang beserta Selfie Pulang & Lokasi Pulang
             $absensiHariIni->update([
                 'time_out'  => $currentTime,
                 'image_out' => $imageName ? 'absensi/' . $imageName : null,
+                'lat_out'   => $request->latitude,
+                'long_out'  => $request->longitude,
             ]);
 
             return redirect()->back()->with('success', 'Berhasil melakukan presensi pulang!');
@@ -103,16 +110,13 @@ class AbsenSayaController extends Controller
 
     private function getAbsensiData(Request $request)
     {
-        // Tangkap Filter (Default: Mingguan)
         $filterType = $request->get('filter_type', 'mingguan');
         $selectedDate = $request->get('date', now()->toDateString());
         $selectedMonth = $request->get('month', date('m'));
         $selectedYear = $request->get('year', date('Y'));
 
-        // Query Absensi Hanya Untuk Guru yang Sedang Login
         $query = Absensi::where('user_id', Auth::id());
 
-        // Logika Filter Periode
         if ($filterType === 'mingguan') {
             $startDate = Carbon::parse($selectedDate);
             $endDate = $startDate->copy()->addDays(6);
@@ -122,7 +126,7 @@ class AbsenSayaController extends Controller
         } elseif ($filterType === 'tahunan') {
             $query->whereYear('date', $selectedYear);
             $periodeText = 'Tahun ' . $selectedYear;
-        } else { // Bulanan
+        } else {
             $query->whereMonth('date', $selectedMonth)
                 ->whereYear('date', $selectedYear);
             $periodeText = Carbon::createFromDate($selectedYear, $selectedMonth, 1)->translatedFormat('F Y');
@@ -130,7 +134,6 @@ class AbsenSayaController extends Controller
 
         $attendances = $query->orderBy('date', 'desc')->get();
 
-        // Ringkasan Statistik Presensi Diri Sendiri
         $stats = [
             'total_hadir'     => $attendances->where('status', 'hadir')->count(),
             'total_terlambat' => $attendances->where('status', 'terlambat')->count(),

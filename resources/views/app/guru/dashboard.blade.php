@@ -4,7 +4,17 @@
 @section('page_title', 'Dashboard Utama')
 
 @section('content')
-    <div class="space-y-6" x-data="{ showScanModal: false }">
+    <div class="space-y-6" x-data="{
+        showScanModal: false,
+        step: 1,
+        qrCodeValue: '',
+        locationStatus: 'Mengambil lokasi...',
+        latitude: '',
+        longitude: '',
+        isLocationReady: false,
+        isCapturing: false,
+        capturedImage: ''
+    }">
 
         {{-- Alert Notifikasi Success / Error --}}
         @if (session('success'))
@@ -49,10 +59,10 @@
         {{-- Grid Kartu Presensi --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-            {{-- Card Action: Scan Barcode (Aktif dengan Trigger Modal) --}}
+            {{-- Card Action: Scan Barcode --}}
             <div
                 class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center flex flex-col items-center justify-center">
-                <button @click="showScanModal = true; startScanner();"
+                <button @click="showScanModal = true; step = 1; startScanner();"
                     class="inline-flex flex-col items-center justify-center w-32 h-32 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-full shadow-lg shadow-emerald-600/20 border-4 border-emerald-100 transition duration-200 cursor-pointer">
                     <i class="fas fa-qrcode text-3xl mb-1"></i>
                     <span class="text-[11px] font-bold uppercase tracking-wider">Scan Barcode</span>
@@ -153,37 +163,105 @@
             </div>
         </div>
 
-        {{-- MODAL SCANNER QR CODE --}}
+        {{-- MODAL SCANNER & VERIFIKASI LOKASI + SELFIE --}}
         <div x-show="showScanModal" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
 
             {{-- Backdrop --}}
-            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="stopScanner(); showScanModal = false;">
-            </div>
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="closeModal()"></div>
 
             {{-- Content Modal --}}
             <div class="flex items-center justify-center min-h-screen p-4">
                 <div
                     class="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 text-center z-10 border border-slate-100">
+
+                    {{-- Header Modal --}}
                     <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-                        <h3 class="font-bold text-slate-800 text-base">Pemindai QR Absensi</h3>
-                        <button @click="stopScanner(); showScanModal = false;" class="text-slate-400 hover:text-slate-600">
+                        <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                            <i class="fas"
+                                :class="step === 1 ? 'fa-qrcode text-emerald-600' : 'fa-camera text-emerald-600'"></i>
+                            <span x-text="step === 1 ? 'Langkah 1: Scan QR Code' : 'Langkah 2: Selfie & Lokasi GPS'"></span>
+                        </h3>
+                        <button @click="closeModal()" class="text-slate-400 hover:text-slate-600">
                             <i class="fas fa-times text-lg"></i>
                         </button>
                     </div>
 
-                    {{-- Area Kamera Scanner --}}
-                    <div class="relative bg-slate-900 rounded-2xl overflow-hidden mb-4">
-                        <div id="reader" class="w-full h-72"></div>
+                    {{-- TAHAP 1: AREA SCANNER QR --}}
+                    <div x-show="step === 1">
+                        <div class="relative bg-slate-900 rounded-2xl overflow-hidden mb-4">
+                            <div id="reader" class="w-full h-72"></div>
+                        </div>
+                        <p class="text-xs text-slate-400">Arahkan kamera HP Anda tepat di dalam area kotak QR Code.</p>
                     </div>
 
-                    {{-- Form Hidden untuk Pengiriman Data ke Backend --}}
+                    {{-- TAHAP 2: VERIFIKASI SELFIE & TITIK LOKASI GPS --}}
+                    <div x-show="step === 2" style="display: none;">
+                        <div class="space-y-4">
+
+                            {{-- Area Preview Selfie / Kamera WebCam --}}
+                            <div class="relative bg-slate-900 rounded-2xl overflow-hidden h-64 border border-slate-200">
+                                <video id="selfieVideo" autoplay playsinline class="w-full h-full object-cover"
+                                    x-show="!capturedImage"></video>
+                                <img :src="capturedImage" class="w-full h-full object-cover" x-show="capturedImage"
+                                    style="display: none;">
+
+                                <button type="button" @click="retakeSelfie()" x-show="capturedImage"
+                                    class="absolute bottom-3 right-3 bg-slate-900/80 hover:bg-slate-900 text-white text-xs px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/20 transition flex items-center gap-1.5">
+                                    <i class="fas fa-redo"></i> Foto Ulang
+                                </button>
+                            </div>
+
+                            {{-- Indicator GPS Lokasi Guru --}}
+                            <div class="p-3.5 rounded-xl border text-left text-xs flex items-center gap-3"
+                                :class="isLocationReady ? 'bg-emerald-50 border-emerald-200 text-emerald-800' :
+                                    'bg-amber-50 border-amber-200 text-amber-800'">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                                    :class="isLocationReady ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'">
+                                    <i class="fas"
+                                        :class="isLocationReady ? 'fa-location-dot' : 'fa-spinner fa-spin'"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-bold"
+                                        x-text="isLocationReady ? 'Lokasi Berhasil Dideteksi' : 'Mencari Titik GPS...'"></p>
+                                    <p class="text-[11px] opacity-80" x-text="locationStatus"></p>
+                                </div>
+                                <button type="button" @click="getLocation()" x-show="!isLocationReady"
+                                    class="text-amber-700 underline font-bold text-[11px]">
+                                    Coba Lagi
+                                </button>
+                            </div>
+
+                            {{-- Tombol Ambil Selfie / Kirim Absensi --}}
+                            <div class="pt-2">
+                                <button type="button" x-show="!capturedImage" @click="takeSelfiePhoto()"
+                                    class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold text-xs py-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
+                                    <i class="fas fa-camera"></i>
+                                    <span>Ambil Foto Selfie</span>
+                                </button>
+
+                                <button type="button" x-show="capturedImage" @click="submitAttendanceForm()"
+                                    :disabled="!isLocationReady"
+                                    :class="isLocationReady ?
+                                        'bg-emerald-600 hover:bg-emerald-700 active:scale-95 cursor-pointer' :
+                                        'bg-slate-300 cursor-not-allowed'"
+                                    class="w-full text-white font-semibold text-xs py-3 rounded-xl transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span>Kirim Presensi Sekarang</span>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {{-- Form Hidden ke Backend --}}
                     <form id="scanForm" action="{{ route('guru.absen_saya.scan') }}" method="POST">
                         @csrf
                         <input type="hidden" name="qr_code" id="qr_code_input">
                         <input type="hidden" name="image" id="image_input">
+                        <input type="hidden" name="latitude" id="latitude_input">
+                        <input type="hidden" name="longitude" id="longitude_input">
                     </form>
 
-                    <p class="text-xs text-slate-400">Posisikan QR Code berada di dalam area kotak pemindai.</p>
                 </div>
             </div>
 
@@ -191,15 +269,19 @@
 
     </div>
 
-    {{-- Script Library Kamera HTML5 QR Code --}}
+    {{-- Script Library Kamera HTML5 QR Code & Geolocation JS --}}
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script>
         let html5QrCode;
+        let selfieStream = null;
+
+        function getAlpineData() {
+            return Alpine.$data(document.querySelector('[x-data]'));
+        }
 
         function startScanner() {
             html5QrCode = new Html5Qrcode("reader");
 
-            // Kalkulasi ukuran qrbox responsif (75% dari dimensi terdeteksi kamera)
             const qrboxFunction = function(viewfinderWidth, viewfinderHeight) {
                 let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
                 let qrboxSize = Math.floor(minEdgeSize * 0.75);
@@ -210,10 +292,10 @@
             };
 
             const config = {
-                fps: 15, // Naikkan frame rate agar deteksi lebih responsif
+                fps: 15,
                 qrbox: qrboxFunction,
                 experimentalFeatures: {
-                    useBarCodeDetectorIfSupported: true // Gunakan bawaan native jika ada
+                    useBarCodeDetectorIfSupported: true
                 }
             };
 
@@ -224,12 +306,12 @@
                 onScanSuccess
             ).catch(err => {
                 console.error("Gagal membuka kamera: ", err);
-                alert("Gagal mengaktifkan kamera. Pastikan izin kamera sudah diberikan!");
+                alert("Gagal mengaktifkan kamera. Berikan izin akses kamera pada browser Anda!");
             });
         }
 
         function stopScanner() {
-            if (html5QrCode) {
+            if (html5QrCode && html5QrCode.isScanning) {
                 html5QrCode.stop().then(() => {
                     html5QrCode.clear();
                 }).catch(err => console.error(err));
@@ -237,21 +319,112 @@
         }
 
         function onScanSuccess(decodedText) {
-            // Ambil screenshot foto selfie dari video kamera
-            const video = document.querySelector("#reader video");
+            stopScanner();
+            document.getElementById("qr_code_input").value = decodedText;
+
+            const data = getAlpineData();
+            data.qrCodeValue = decodedText;
+            data.step = 2; // Pindah ke Tahap 2 (Selfie & GPS)
+
+            // Aktifkan Kamera Depan Selfie & Dapatkan GPS
+            startSelfieCamera();
+            getLocation();
+        }
+
+        function startSelfieCamera() {
+            const video = document.getElementById("selfieVideo");
+            navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: "user"
+                },
+                audio: false
+            }).then(stream => {
+                selfieStream = stream;
+                video.srcObject = stream;
+            }).catch(err => {
+                console.error("Gagal mengakses kamera selfie:", err);
+                alert("Kamera depan tidak dapat diakses!");
+            });
+        }
+
+        function stopSelfieCamera() {
+            if (selfieStream) {
+                selfieStream.getTracks().forEach(track => track.stop());
+                selfieStream = null;
+            }
+        }
+
+        function takeSelfiePhoto() {
+            const video = document.getElementById("selfieVideo");
             let canvas = document.createElement("canvas");
             canvas.width = video.videoWidth || 640;
             canvas.height = video.videoHeight || 480;
             let ctx = canvas.getContext("2d");
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            // Simpan data Base64 gambar dan isi form
-            document.getElementById("qr_code_input").value = decodedText;
-            document.getElementById("image_input").value = canvas.toDataURL("image/png");
+            const imageData = canvas.toDataURL("image/png");
+            document.getElementById("image_input").value = imageData;
 
-            // Matikan scanner & kirim form secara otomatis
-            stopScanner();
+            const data = getAlpineData();
+            data.capturedImage = imageData;
+        }
+
+        function retakeSelfie() {
+            const data = getAlpineData();
+            data.capturedImage = '';
+            document.getElementById("image_input").value = '';
+        }
+
+        function getLocation() {
+            const data = getAlpineData();
+            data.isLocationReady = false;
+            data.locationStatus = "Meminta akses titik koordinat GPS...";
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+
+                        document.getElementById("latitude_input").value = lat;
+                        document.getElementById("longitude_input").value = lng;
+
+                        data.latitude = lat;
+                        data.longitude = lng;
+                        data.isLocationReady = true;
+                        data.locationStatus = `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
+                    },
+                    (error) => {
+                        console.error("Gagal mengambil GPS:", error);
+                        data.isLocationReady = false;
+                        if (error.code === error.PERMISSION_DENIED) {
+                            data.locationStatus = "Akses lokasi ditolak! Harap aktifkan GPS HP Anda.";
+                        } else {
+                            data.locationStatus = "Gagal mengambil titik koordinat GPS.";
+                        }
+                    }, {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                data.locationStatus = "Browser tidak mendukung Geolocation GPS.";
+            }
+        }
+
+        function submitAttendanceForm() {
+            stopSelfieCamera();
             document.getElementById("scanForm").submit();
+        }
+
+        function closeModal() {
+            stopScanner();
+            stopSelfieCamera();
+            const data = getAlpineData();
+            data.showScanModal = false;
+            data.step = 1;
+            data.capturedImage = '';
         }
 
         function updateClock() {
