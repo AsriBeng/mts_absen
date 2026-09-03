@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/absensi', [AbsensiController::class, 'index'])->name('admin.absensi');
     Route::post('/admin/absensi/generate-key', [AbsensiController::class, 'generateKey'])->name('admin.absensi.generate');
     Route::get('/admin/rekap', [RekapController::class, 'index'])->name('admin.rekap');
+    Route::get('/admin/rekap/export-pdf', [RekapController::class, 'exportPdf'])->name('admin.rekap.export_pdf');
 
     Route::get('/admin/users-setting', [UserSettingController::class, 'index'])->name('admin.users_setting');
     Route::post('/admin/users-setting', [UserSettingController::class, 'store'])->name('admin.users_setting.store');

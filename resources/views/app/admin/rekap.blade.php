@@ -59,16 +59,18 @@
 
             </div>
 
-            {{-- Tombol Filter & Cetak --}}
+            {{-- Tombol Filter & Cetak PDF --}}
             <div class="flex items-center gap-2 w-full lg:w-auto">
                 <button type="submit" class="flex-1 lg:flex-none px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl transition shadow-sm flex items-center justify-center gap-2">
                     <i class="fas fa-filter"></i>
                     <span>Terapkan Filter</span>
                 </button>
-                <button type="button" onclick="window.print()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl transition flex items-center justify-center gap-2">
+
+                {{-- Tombol Export PDF dengan Parameter Aktif --}}
+                <a href="{{ route('admin.rekap.export_pdf', request()->all()) }}" target="_blank" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl transition flex items-center justify-center gap-2">
                     <i class="fas fa-print"></i>
                     <span class="hidden sm:inline">Cetak / Export</span>
-                </button>
+                </a>
             </div>
 
         </form>
