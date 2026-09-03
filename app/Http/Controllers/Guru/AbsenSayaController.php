@@ -80,13 +80,14 @@ class AbsenSayaController extends Controller
             $status = Carbon::now()->greaterThan($jamBatasHadir) ? 'terlambat' : 'hadir';
 
             Absensi::create([
-                'user_id'      => $userId,
-                'date'         => $today,
-                'time_in'      => $currentTime,
-                'status'       => $status,
-                'image_in'     => $imageName ? 'absensi/' . $imageName : null,
-                'lat_in'       => $request->latitude,
-                'long_in'      => $request->longitude,
+                'user_id'        => $userId,
+                'absensi_key_id' => $validKey->id,
+                'date'           => $today,
+                'time_in'        => $currentTime,
+                'status'         => $status,
+                'image_in'       => $imageName ? 'absensi/' . $imageName : null,
+                'user_latitude'  => $request->latitude,   // <-- Menggunakan kolom bawaan Anda
+                'user_longitude' => $request->longitude,  // <-- Menggunakan kolom bawaan Anda
             ]);
 
             return redirect()->back()->with('success', 'Berhasil melakukan presensi masuk!');
@@ -96,12 +97,12 @@ class AbsenSayaController extends Controller
                 return redirect()->back()->with('error', 'Anda sudah melakukan presensi masuk dan pulang hari ini.');
             }
 
-            // Update Jam Pulang beserta Selfie Pulang & Lokasi Pulang
+            // Update Jam Pulang
             $absensiHariIni->update([
-                'time_out'  => $currentTime,
-                'image_out' => $imageName ? 'absensi/' . $imageName : null,
-                'lat_out'   => $request->latitude,
-                'long_out'  => $request->longitude,
+                'time_out'       => $currentTime,
+                'image_out'      => $imageName ? 'absensi/' . $imageName : null,
+                'user_latitude'  => $request->latitude,   // <-- Update koordinat terbaru saat pulang
+                'user_longitude' => $request->longitude,
             ]);
 
             return redirect()->back()->with('success', 'Berhasil melakukan presensi pulang!');

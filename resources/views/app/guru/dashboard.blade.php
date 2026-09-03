@@ -4,17 +4,7 @@
 @section('page_title', 'Dashboard Utama')
 
 @section('content')
-    <div class="space-y-6" x-data="{
-        showScanModal: false,
-        step: 1,
-        qrCodeValue: '',
-        locationStatus: 'Mengambil lokasi...',
-        latitude: '',
-        longitude: '',
-        isLocationReady: false,
-        isCapturing: false,
-        capturedImage: ''
-    }">
+    <div class="space-y-6" x-data="dashboardAttendance()">
 
         {{-- Alert Notifikasi Success / Error --}}
         @if (session('success'))
@@ -62,7 +52,7 @@
             {{-- Card Action: Scan Barcode --}}
             <div
                 class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center flex flex-col items-center justify-center">
-                <button @click="showScanModal = true; step = 1; startScanner();"
+                <button @click="openScanModal()"
                     class="inline-flex flex-col items-center justify-center w-32 h-32 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-full shadow-lg shadow-emerald-600/20 border-4 border-emerald-100 transition duration-200 cursor-pointer">
                     <i class="fas fa-qrcode text-3xl mb-1"></i>
                     <span class="text-[11px] font-bold uppercase tracking-wider">Scan Barcode</span>
@@ -181,7 +171,7 @@
                                 :class="step === 1 ? 'fa-qrcode text-emerald-600' : 'fa-camera text-emerald-600'"></i>
                             <span x-text="step === 1 ? 'Langkah 1: Scan QR Code' : 'Langkah 2: Selfie & Lokasi GPS'"></span>
                         </h3>
-                        <button @click="closeModal()" class="text-slate-400 hover:text-slate-600">
+                        <button type="button" @click="closeModal()" class="text-slate-400 hover:text-slate-600">
                             <i class="fas fa-times text-lg"></i>
                         </button>
                     </div>
@@ -195,7 +185,7 @@
                     </div>
 
                     {{-- TAHAP 2: VERIFIKASI SELFIE & TITIK LOKASI GPS --}}
-                    <div x-show="step === 2" style="display: none;">
+                    <div x-show="step === 2">
                         <div class="space-y-4">
 
                             {{-- Area Preview Selfie / Kamera WebCam --}}
@@ -269,162 +259,180 @@
 
     </div>
 
-    {{-- Script Library Kamera HTML5 QR Code & Geolocation JS --}}
+    {{-- Script Library Kamera HTML5 QR Code --}}
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script>
-        let html5QrCode;
+        let html5QrCode = null;
         let selfieStream = null;
 
-        function getAlpineData() {
-            return Alpine.$data(document.querySelector('[x-data]'));
-        }
+        function dashboardAttendance() {
+            return {
+                showScanModal: false,
+                step: 1,
+                qrCodeValue: '',
+                locationStatus: 'Mengambil lokasi...',
+                latitude: '',
+                longitude: '',
+                isLocationReady: false,
+                capturedImage: '',
 
-        function startScanner() {
-            html5QrCode = new Html5Qrcode("reader");
+                openScanModal() {
+                    this.showScanModal = true;
+                    this.step = 1;
+                    this.capturedImage = '';
+                    this.isLocationReady = false;
+                    this.$nextTick(() => {
+                        this.startScanner();
+                    });
+                },
 
-            const qrboxFunction = function(viewfinderWidth, viewfinderHeight) {
-                let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
-                let qrboxSize = Math.floor(minEdgeSize * 0.75);
-                return {
-                    width: qrboxSize,
-                    height: qrboxSize
-                };
-            };
+                startScanner() {
+                    if (html5QrCode) {
+                        html5QrCode.clear();
+                    }
+                    html5QrCode = new Html5Qrcode("reader");
 
-            const config = {
-                fps: 15,
-                qrbox: qrboxFunction,
-                experimentalFeatures: {
-                    useBarCodeDetectorIfSupported: true
+                    const config = {
+                        fps: 15,
+                        qrbox: (w, h) => {
+                            let size = Math.floor(Math.min(w, h) * 0.75);
+                            return {
+                                width: size,
+                                height: size
+                            };
+                        },
+                        experimentalFeatures: {
+                            useBarCodeDetectorIfSupported: true
+                        }
+                    };
+
+                    html5QrCode.start({
+                            facingMode: "environment"
+                        },
+                        config,
+                        (decodedText) => {
+                            // SAAT SCAN BERHASIL
+                            document.getElementById("qr_code_input").value = decodedText;
+                            this.qrCodeValue = decodedText;
+
+                            // HENTIKAN SCANNER LALU PINDAH TAHAP
+                            if (html5QrCode && html5QrCode.isScanning) {
+                                html5QrCode.stop().then(() => {
+                                    html5QrCode.clear();
+                                    this.goToStep2();
+                                }).catch(() => {
+                                    this.goToStep2();
+                                });
+                            } else {
+                                this.goToStep2();
+                            }
+                        }
+                    ).catch(err => {
+                        console.error("Gagal kamera: ", err);
+                        alert("Izin kamera ditolak/tidak dapat diakses.");
+                    });
+                },
+
+                goToStep2() {
+                    this.step = 2;
+                    this.$nextTick(() => {
+                        this.startSelfieCamera();
+                        this.getLocation();
+                    });
+                },
+
+                startSelfieCamera() {
+                    const video = document.getElementById("selfieVideo");
+                    navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: "user"
+                        },
+                        audio: false
+                    }).then(stream => {
+                        selfieStream = stream;
+                        if (video) video.srcObject = stream;
+                    }).catch(err => {
+                        console.error("Kamera selfie gagal:", err);
+                        alert("Kamera depan tidak dapat diakses.");
+                    });
+                },
+
+                stopSelfieCamera() {
+                    if (selfieStream) {
+                        selfieStream.getTracks().forEach(track => track.stop());
+                        selfieStream = null;
+                    }
+                },
+
+                takeSelfiePhoto() {
+                    const video = document.getElementById("selfieVideo");
+                    let canvas = document.createElement("canvas");
+                    canvas.width = video.videoWidth || 640;
+                    canvas.height = video.videoHeight || 480;
+                    let ctx = canvas.getContext("2d");
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                    const imageData = canvas.toDataURL("image/png");
+                    document.getElementById("image_input").value = imageData;
+                    this.capturedImage = imageData;
+                },
+
+                retakeSelfie() {
+                    this.capturedImage = '';
+                    document.getElementById("image_input").value = '';
+                },
+
+                getLocation() {
+                    this.isLocationReady = false;
+                    this.locationStatus = "Meminta akses lokasi GPS...";
+
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                const lat = position.coords.latitude;
+                                const lng = position.coords.longitude;
+
+                                document.getElementById("latitude_input").value = lat;
+                                document.getElementById("longitude_input").value = lng;
+
+                                this.latitude = lat;
+                                this.longitude = lng;
+                                this.isLocationReady = true;
+                                this.locationStatus = `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
+                            },
+                            (error) => {
+                                this.isLocationReady = false;
+                                if (error.code === error.PERMISSION_DENIED) {
+                                    this.locationStatus = "Akses lokasi ditolak. Harap aktifkan GPS HP Anda.";
+                                } else {
+                                    this.locationStatus = "Gagal mendapatkan koordinat GPS.";
+                                }
+                            }, {
+                                enableHighAccuracy: true,
+                                timeout: 10000,
+                                maximumAge: 0
+                            }
+                        );
+                    } else {
+                        this.locationStatus = "Browser tidak mendukung Geolocation.";
+                    }
+                },
+
+                submitAttendanceForm() {
+                    this.stopSelfieCamera();
+                    document.getElementById("scanForm").submit();
+                },
+
+                closeModal() {
+                    if (html5QrCode && html5QrCode.isScanning) {
+                        html5QrCode.stop().then(() => html5QrCode.clear()).catch(() => {});
+                    }
+                    this.stopSelfieCamera();
+                    this.showScanModal = false;
+                    this.step = 1;
+                    this.capturedImage = '';
                 }
             };
-
-            html5QrCode.start({
-                    facingMode: "environment"
-                },
-                config,
-                onScanSuccess
-            ).catch(err => {
-                console.error("Gagal membuka kamera: ", err);
-                alert("Gagal mengaktifkan kamera. Berikan izin akses kamera pada browser Anda!");
-            });
-        }
-
-        function stopScanner() {
-            if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.stop().then(() => {
-                    html5QrCode.clear();
-                }).catch(err => console.error(err));
-            }
-        }
-
-        function onScanSuccess(decodedText) {
-            stopScanner();
-            document.getElementById("qr_code_input").value = decodedText;
-
-            const data = getAlpineData();
-            data.qrCodeValue = decodedText;
-            data.step = 2; // Pindah ke Tahap 2 (Selfie & GPS)
-
-            // Aktifkan Kamera Depan Selfie & Dapatkan GPS
-            startSelfieCamera();
-            getLocation();
-        }
-
-        function startSelfieCamera() {
-            const video = document.getElementById("selfieVideo");
-            navigator.mediaDevices.getUserMedia({
-                video: {
-                    facingMode: "user"
-                },
-                audio: false
-            }).then(stream => {
-                selfieStream = stream;
-                video.srcObject = stream;
-            }).catch(err => {
-                console.error("Gagal mengakses kamera selfie:", err);
-                alert("Kamera depan tidak dapat diakses!");
-            });
-        }
-
-        function stopSelfieCamera() {
-            if (selfieStream) {
-                selfieStream.getTracks().forEach(track => track.stop());
-                selfieStream = null;
-            }
-        }
-
-        function takeSelfiePhoto() {
-            const video = document.getElementById("selfieVideo");
-            let canvas = document.createElement("canvas");
-            canvas.width = video.videoWidth || 640;
-            canvas.height = video.videoHeight || 480;
-            let ctx = canvas.getContext("2d");
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            const imageData = canvas.toDataURL("image/png");
-            document.getElementById("image_input").value = imageData;
-
-            const data = getAlpineData();
-            data.capturedImage = imageData;
-        }
-
-        function retakeSelfie() {
-            const data = getAlpineData();
-            data.capturedImage = '';
-            document.getElementById("image_input").value = '';
-        }
-
-        function getLocation() {
-            const data = getAlpineData();
-            data.isLocationReady = false;
-            data.locationStatus = "Meminta akses titik koordinat GPS...";
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-
-                        document.getElementById("latitude_input").value = lat;
-                        document.getElementById("longitude_input").value = lng;
-
-                        data.latitude = lat;
-                        data.longitude = lng;
-                        data.isLocationReady = true;
-                        data.locationStatus = `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
-                    },
-                    (error) => {
-                        console.error("Gagal mengambil GPS:", error);
-                        data.isLocationReady = false;
-                        if (error.code === error.PERMISSION_DENIED) {
-                            data.locationStatus = "Akses lokasi ditolak! Harap aktifkan GPS HP Anda.";
-                        } else {
-                            data.locationStatus = "Gagal mengambil titik koordinat GPS.";
-                        }
-                    }, {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 0
-                    }
-                );
-            } else {
-                data.locationStatus = "Browser tidak mendukung Geolocation GPS.";
-            }
-        }
-
-        function submitAttendanceForm() {
-            stopSelfieCamera();
-            document.getElementById("scanForm").submit();
-        }
-
-        function closeModal() {
-            stopScanner();
-            stopSelfieCamera();
-            const data = getAlpineData();
-            data.showScanModal = false;
-            data.step = 1;
-            data.capturedImage = '';
         }
 
         function updateClock() {
