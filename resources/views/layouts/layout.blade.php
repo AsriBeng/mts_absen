@@ -31,7 +31,7 @@
       ">
 
     {{-- HEADER UTAMA --}}
-    <header class="h-20 bg-emerald-900 text-white px-4 sm:px-6 flex items-center justify-between border-b border-emerald-950 shadow-md sticky top-0 z-30 flex-shrink-0">
+    <header class="h-20 bg-emerald-900 text-white px-4 sm:px-6 flex items-center justify-between border-b border-emerald-950 shadow-md sticky top-0 z-30 shrink-0">
 
         {{-- Sisi Kiri Header: Logo + Instansi + Toggle + Title --}}
         <div class="flex items-center gap-3 sm:gap-4">
@@ -54,7 +54,7 @@
             </button>
 
             {{-- Nama Halaman Aktif --}}
-            <h2 class="text-sm sm:text-lg font-bold text-white truncate max-w-[150px] sm:max-w-xs">
+            <h2 class="text-sm sm:text-lg font-bold text-white truncate max-w-37.5 sm:max-w-xs">
                 @yield('page_title', 'Dashboard')
             </h2>
         </div>
@@ -125,7 +125,7 @@
     <div class="flex-1 flex overflow-hidden">
 
         {{-- SIDEBAR DESKTOP & TABLET --}}
-        <aside class="hidden md:flex flex-col bg-emerald-950 text-white flex-shrink-0 transition-all duration-300 border-r border-emerald-900"
+        <aside class="hidden md:flex flex-col bg-emerald-950 text-white shrink-0 transition-all duration-300 border-r border-emerald-900"
                :class="sidebarMinimized ? 'w-20' : 'w-64'">
             <div class="flex-1 overflow-y-auto py-2">
                 @include('layouts.menu')
