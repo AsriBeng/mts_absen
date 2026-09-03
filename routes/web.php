@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Guru\GuruController;
 use App\Http\Controllers\Admin\AbsensiController;
+use App\Http\Controllers\Admin\RekapController;
 
 Route::get('/', function () {
     // 1. Jika pengguna belum login, arahkan ke halaman login
@@ -32,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/absensi', [AbsensiController::class, 'index'])->name('admin.absensi');
     Route::post('/admin/absensi/generate-key', [AbsensiController::class, 'generateKey'])->name('admin.absensi.generate');
-
+    Route::get('/admin/rekap', [RekapController::class, 'index'])->name('admin.rekap');
     // Route Guru
     Route::get('/guru/dashboard', [GuruController::class, 'index'])->name('guru.dashboard');
 });
