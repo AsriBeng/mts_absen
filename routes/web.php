@@ -8,6 +8,7 @@ use App\Http\Controllers\Guru\GuruController;
 use App\Http\Controllers\Admin\AbsensiController;
 use App\Http\Controllers\Admin\RekapController;
 use App\Http\Controllers\Admin\UserSettingController;
+use App\Http\Controllers\Guru\AbsenSayaController;
 
 Route::get('/', function () {
     // 1. Jika pengguna belum login, arahkan ke halaman login
@@ -43,4 +44,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Route Guru
     Route::get('/guru/dashboard', [GuruController::class, 'index'])->name('guru.dashboard');
+    Route::get('/guru/absen-saya', [AbsenSayaController::class, 'index'])->name('guru.absen_saya');
+    Route::get('/guru/absen-saya/export-pdf', [AbsenSayaController::class, 'exportPdf'])->name('guru.absen_saya.export_pdf');
 });
