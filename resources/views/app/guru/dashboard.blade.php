@@ -4,10 +4,10 @@
 @section('page_title', 'Dashboard Utama')
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="space-y-6">
 
     {{-- Widget Hari & Jam Digital Real-time --}}
-    <div class="bg-gradient-to-r from-emerald-800 to-emerald-600 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
+    <div class="bg-gradient-to-r from-emerald-800 to-emerald-600 rounded-2xl p-6 text-white shadow-sm relative overflow-hidden">
         <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
             <div>
                 <p class="text-xs uppercase tracking-wider font-semibold text-emerald-200">
@@ -23,60 +23,67 @@
                 Status Hari Ini: <span class="font-bold text-emerald-200">Jam Kerja Normal</span>
             </div>
         </div>
-        {{-- Ornament Pattern Background --}}
         <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
     </div>
 
-    {{-- Grid 2 Kolom: Scan Barcode & Log Masuk/Pulang --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+    {{-- Grid Kartu Presensi (Sama Fleksibelnya Seperti Admin) --}}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
         {{-- Card Action: Scan Barcode --}}
-        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm text-center flex flex-col items-center justify-center">
-            <a href="#" class="inline-flex flex-col items-center justify-center w-36 h-36 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-full shadow-xl shadow-emerald-600/30 border-4 border-emerald-100 transition duration-200">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center flex flex-col items-center justify-center">
+            <a href="#" class="inline-flex flex-col items-center justify-center w-32 h-32 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-full shadow-lg shadow-emerald-600/20 border-4 border-emerald-100 transition duration-200">
                 <i class="fas fa-qrcode text-3xl mb-1"></i>
-                <span class="text-xs font-bold uppercase tracking-wider">Scan Barcode</span>
+                <span class="text-[11px] font-bold uppercase tracking-wider">Scan Barcode</span>
             </a>
-            <p class="text-xs text-slate-400 mt-4">Arahkan kamera ke QR Code papan sekolah</p>
+            <p class="text-xs text-slate-400 mt-3">Arahkan kamera ke QR Code papan sekolah</p>
         </div>
 
-        {{-- Log Status Absen Hari Ini --}}
-        <div class="space-y-4">
+        {{-- Status Log Masuk & Pulang --}}
+        <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+
             {{-- Absen Masuk --}}
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
                 <div>
                     <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Absen Masuk</span>
-                    <p class="text-xl font-bold text-slate-800 mt-0.5">07:15:20</p>
+                    <p class="text-2xl font-bold text-slate-800 mt-1">07:15:20</p>
                 </div>
-                <span class="px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-full text-xs font-bold">
-                    Hadir
-                </span>
+                <div class="mt-4 flex items-center justify-between">
+                    <span class="px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-full text-xs font-bold">
+                        Hadir
+                    </span>
+                    <span class="text-[11px] text-slate-400">Terhitung Tepat Waktu</span>
+                </div>
             </div>
 
             {{-- Absen Pulang --}}
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
                 <div>
                     <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Absen Pulang</span>
-                    <p class="text-xl font-bold text-slate-400 mt-0.5">-- : --</p>
+                    <p class="text-2xl font-bold text-slate-400 mt-1">-- : --</p>
                 </div>
-                <span class="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-xs font-bold">
-                    Belum Absen
-                </span>
+                <div class="mt-4 flex items-center justify-between">
+                    <span class="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-xs font-bold">
+                        Belum Absen
+                    </span>
+                    <span class="text-[11px] text-slate-400">Jam Pulang: 14:00</span>
+                </div>
             </div>
+
         </div>
 
     </div>
 
     {{-- Section Riwayat Terakhir --}}
-    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-            <h3 class="text-sm font-bold text-slate-800">Riwayat Terakhir</h3>
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+            <h3 class="font-bold text-slate-800">Riwayat Terakhir</h3>
             <a href="#" class="text-xs font-semibold text-emerald-600 hover:underline">Lihat Semua</a>
         </div>
 
-        <div class="space-y-3">
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/60 flex items-center justify-between text-xs">
+        <div class="p-4">
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60 flex items-center justify-between text-xs">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold shrink-0">
                         <i class="fas fa-check text-base"></i>
                     </div>
                     <div>
@@ -107,8 +114,7 @@
         }
     }
 
-    // Jalankan setiap 1 detik (1000 milidetik)
     setInterval(updateClock, 1000);
-    updateClock(); // Jalankan langsung saat pertama di-load
+    updateClock();
 </script>
 @endsection
