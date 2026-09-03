@@ -3,11 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AuthController;
+
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Guru\GuruController;
 use App\Http\Controllers\Admin\AbsensiController;
 use App\Http\Controllers\Admin\RekapController;
 use App\Http\Controllers\Admin\UserSettingController;
+use App\Http\Controllers\Admin\DaySettingController;
+
+use App\Http\Controllers\Guru\GuruController;
 use App\Http\Controllers\Guru\AbsenSayaController;
 
 Route::get('/', function () {
@@ -42,6 +45,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/admin/users-setting/{id}', [UserSettingController::class, 'update'])->name('admin.users_setting.update');
     Route::delete('/admin/users-setting/{id}', [UserSettingController::class, 'destroy'])->name('admin.users_setting.destroy');
 
+    Route::get('/admin/days', [DaySettingController::class, 'index'])->name('admin.days');
+    Route::post('/admin/days', [DaySettingController::class, 'store'])->name('admin.days.store');
+    Route::put('/admin/days/{id}', [DaySettingController::class, 'update'])->name('admin.days.update');
+    Route::delete('/admin/days/{id}', [DaySettingController::class, 'destroy'])->name('admin.days.destroy');
     // Route Guru
     Route::get('/guru/dashboard', [GuruController::class, 'index'])->name('guru.dashboard');
     Route::get('/guru/absen-saya', [AbsenSayaController::class, 'index'])->name('guru.absen_saya');
