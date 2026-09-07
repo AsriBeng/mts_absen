@@ -10,10 +10,7 @@ class DaySettingController extends Controller
 {
     public function index()
     {
-        // Ambil semua data hari
         $settings = AbsensiSetting::orderBy('id', 'asc')->get();
-
-        // Hitung total data yang ada di database
         $totalCount = $settings->count();
 
         return view('app.admin.days', compact('settings', 'totalCount'));
@@ -21,7 +18,6 @@ class DaySettingController extends Controller
 
     public function store(Request $request)
     {
-        // Batas maksimal 7 data
         if (AbsensiSetting::count() >= 7) {
             return redirect()->back()->with('error', 'Gagal menambahkan data! Maksimal pengaturan hari adalah 7 data.');
         }
