@@ -21,7 +21,7 @@
             </div>
         @endif
 
-        {{-- Widget Hari & Jam Digital Real-time --}}
+        {{-- Widget Hari & Jam Digital --}}
         <div class="bg-gradient-to-r from-emerald-800 to-emerald-600 rounded-2xl p-6 text-white shadow-sm relative overflow-hidden">
             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
                 <div>
@@ -33,8 +33,6 @@
                         <span class="text-sm font-normal">WIB</span>
                     </h3>
                 </div>
-
-                {{-- Status Hari Ini (Masuk / Libur) --}}
                 <div class="text-xs bg-emerald-900/40 backdrop-blur-md px-4 py-2 rounded-xl border border-emerald-400/30">
                     <i class="fas fa-info-circle mr-1 text-emerald-300"></i>
                     Status Hari Ini:
@@ -45,7 +43,6 @@
                     @endif
                 </div>
             </div>
-            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
         </div>
 
         {{-- Grid Kartu Presensi --}}
@@ -70,9 +67,8 @@
                 @endif
             </div>
 
-            {{-- Status Log Masuk & Pulang Dinamis --}}
+            {{-- Status Log Masuk & Pulang --}}
             <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-
                 {{-- Absen Masuk --}}
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
                     <div>
@@ -86,20 +82,19 @@
                             <span class="px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-full text-xs font-bold">
                                 {{ ucfirst($todayAttendance->status) }}
                             </span>
-                            <span class="text-[11px] text-slate-400">Tercatat di Server</span>
                         @elseif (($todaySetting->status ?? 'masuk') === 'libur')
                             <span class="px-3 py-1 bg-rose-50 text-rose-600 border border-rose-100 rounded-full text-xs font-bold">
                                 Libur
                             </span>
-                            <span class="text-[11px] text-slate-400">Jam Masuk: -</span>
                         @else
                             <span class="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-xs font-bold">
                                 Belum Absen
                             </span>
-                            <span class="text-[11px] text-slate-400">
-                                Jam Masuk: {{ isset($todaySetting->time_in) ? \Carbon\Carbon::parse($todaySetting->time_in)->format('H:i') : '07:00' }}
-                            </span>
                         @endif
+
+                        <span class="text-[11px] text-slate-400">
+                            Jam Masuk: {{ isset($todaySetting->time_in) ? \Carbon\Carbon::parse($todaySetting->time_in)->format('H:i') : '07:00' }}
+                        </span>
                     </div>
                 </div>
 
@@ -116,32 +111,31 @@
                             <span class="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-100 rounded-full text-xs font-bold">
                                 Sudah Pulang
                             </span>
-                            <span class="text-[11px] text-slate-400">Selesai Kerja</span>
                         @elseif (($todaySetting->status ?? 'masuk') === 'libur')
                             <span class="px-3 py-1 bg-rose-50 text-rose-600 border border-rose-100 rounded-full text-xs font-bold">
                                 Libur
                             </span>
-                            <span class="text-[11px] text-slate-400">Jam Pulang: -</span>
                         @else
                             <span class="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-xs font-bold">
                                 Belum Absen
                             </span>
-                            <span class="text-[11px] text-slate-400">
-                                Jam Pulang: {{ isset($todaySetting->time_out) ? \Carbon\Carbon::parse($todaySetting->time_out)->format('H:i') : '14:00' }}
-                            </span>
                         @endif
+
+                        <span class="text-[11px] text-slate-400">
+                            Jam Pulang: {{ isset($todaySetting->time_out) ? \Carbon\Carbon::parse($todaySetting->time_out)->format('H:i') : '14:00' }}
+                        </span>
                     </div>
                 </div>
-
             </div>
 
         </div>
 
-        {{-- Section Riwayat Terakhir --}}
+        {{-- Section Riwayat Presensi Terakhir --}}
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
             <div class="p-5 border-b border-slate-100 flex items-center justify-between">
                 <h3 class="font-bold text-slate-800">Riwayat Presensi Terakhir</h3>
-                <a href="{{ route('guru.absen_saya') }}" class="text-xs font-semibold text-emerald-600 hover:underline">Lihat Semua</a>
+                <a href="{{ route('guru.absen_saya') }}"
+                    class="text-xs font-semibold text-emerald-600 hover:underline">Lihat Semua</a>
             </div>
 
             <div class="p-4 space-y-3">
@@ -153,7 +147,7 @@
                             </div>
                             <div>
                                 <p class="font-bold text-slate-800 text-sm">
-                                    {{ \Carbon\Carbon::parse($item->date)->translatedFormat('d F Y') }}
+                                    {{ \Carbon\Carbon::parse($item->date)->locale('id')->translatedFormat('d F Y') }}
                                 </p>
                                 <p class="text-slate-400 mt-0.5">
                                     {{ $item->time_in ?? '-' }} - {{ $item->time_out ?? 'Belum Pulang' }}
@@ -185,7 +179,7 @@
                         </button>
                     </div>
 
-                    {{-- TAHAP 1: AREA SCANNER QR --}}
+                    {{-- TAHAP 1: SCANNER --}}
                     <div x-show="step === 1">
                         <div class="relative bg-slate-900 rounded-2xl overflow-hidden mb-4">
                             <div id="reader" class="w-full h-72"></div>
@@ -193,7 +187,7 @@
                         <p class="text-xs text-slate-400">Arahkan kamera HP Anda tepat di dalam area kotak QR Code.</p>
                     </div>
 
-                    {{-- TAHAP 2: VERIFIKASI SELFIE & TITIK LOKASI GPS --}}
+                    {{-- TAHAP 2: SELFIE & GPS --}}
                     <div x-show="step === 2">
                         <div class="space-y-4">
                             <div class="relative bg-slate-900 rounded-2xl overflow-hidden h-64 border border-slate-200">
@@ -250,9 +244,32 @@
             </div>
         </div>
 
+        {{-- MODAL POPUP NOTIFIKASI --}}
+        <div x-show="showNoticeModal" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="closeNoticeModal()"></div>
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="relative bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center z-10 border border-slate-100">
+
+                    {{-- Icon Notifikasi Dinamis --}}
+                    <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-4 text-2xl"
+                        :class="isNoticeSuccess ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'">
+                        <i class="fas" :class="isNoticeSuccess ? 'fa-check-circle' : 'fa-exclamation-triangle'"></i>
+                    </div>
+
+                    <h3 class="font-bold text-slate-800 text-lg mb-1" x-text="noticeTitle"></h3>
+                    <p class="text-xs text-slate-500 mb-6 leading-relaxed" x-text="noticeMessage"></p>
+
+                    <button type="button" @click="closeNoticeModal()"
+                        class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold text-xs py-3 rounded-xl transition cursor-pointer">
+                        Mengerti
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    {{-- Script Library Kamera HTML5 QR Code & Realtime Clock --}}
+    {{-- Script JavaScript --}}
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script>
         let html5QrCode = null;
@@ -268,6 +285,26 @@
                 longitude: '',
                 isLocationReady: false,
                 capturedImage: '',
+
+                // STATE UNTUK MODAL NOTIFIKASI
+                showNoticeModal: false,
+                isNoticeSuccess: false,
+                noticeTitle: '',
+                noticeMessage: '',
+
+                openNoticeModal(title, message, isSuccess = false) {
+                    this.noticeTitle = title;
+                    this.noticeMessage = message;
+                    this.isNoticeSuccess = isSuccess;
+                    this.showNoticeModal = true;
+                },
+
+                closeNoticeModal() {
+                    this.showNoticeModal = false;
+                    if (this.isNoticeSuccess) {
+                        window.location.reload();
+                    }
+                },
 
                 openScanModal() {
                     this.showScanModal = true;
@@ -314,7 +351,7 @@
                         }
                     ).catch(err => {
                         console.error("Gagal kamera: ", err);
-                        alert("Izin kamera ditolak/tidak dapat diakses.");
+                        this.openNoticeModal("Gagal Kamera", "Izin kamera ditolak atau tidak dapat diakses.");
                     });
                 },
 
@@ -336,7 +373,7 @@
                         if (video) video.srcObject = stream;
                     }).catch(err => {
                         console.error("Kamera selfie gagal:", err);
-                        alert("Kamera depan tidak dapat diakses.");
+                        this.openNoticeModal("Akses Kamera", "Kamera depan tidak dapat diakses.");
                     });
                 },
 
@@ -403,7 +440,33 @@
 
                 submitAttendanceForm() {
                     this.stopSelfieCamera();
-                    document.getElementById("scanForm").submit();
+
+                    const formElement = document.getElementById("scanForm");
+                    const formData = new FormData(formElement);
+
+                    fetch(formElement.action, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                            "Accept": "application/json"
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.closeModal();
+
+                        if (data.success) {
+                            this.openNoticeModal("Presensi Berhasil", data.message, true);
+                        } else {
+                            this.openNoticeModal("Belum Waktunya Pulang", data.message, false);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        this.closeModal();
+                        this.openNoticeModal("Gagal Sistem", "Terjadi kesalahan sistem saat menghubungkan ke server.");
+                    });
                 },
 
                 closeModal() {
