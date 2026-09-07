@@ -473,7 +473,9 @@
                         if (data.success) {
                             this.openNoticeModal("Presensi Berhasil", data.message, true);
                         } else {
-                            this.openNoticeModal("Belum Waktunya Pulang", data.message, false);
+                            // Gunakan judul dinamis atau "Gagal Presensi" agar akurat
+                            const modalTitle = data.title || "Gagal Presensi";
+                            this.openNoticeModal(modalTitle, data.message, false);
                         }
                     })
                     .catch(error => {

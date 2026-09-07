@@ -41,7 +41,6 @@ class GuruController extends Controller
 
     public function storeScan(Request $request)
     {
-        // Validasi input
         $request->validate([
             'qr_code'   => 'required',
             'image'     => 'required',
@@ -61,21 +60,25 @@ class GuruController extends Controller
         if (!$activeKey) {
             return response()->json([
                 'success' => false,
+                'title'   => 'QR Code Tidak Valid',
                 'message' => 'QR Code tidak valid atau sudah tidak aktif!'
             ]);
         }
 
-        // 2. Ambil Setting Hari Ini
+        // 2. Ambil Setting Hari Ini (Cek Bahasa Indonesia & Inggris)
         $dayNameMap = [
             'Sunday' => 'Minggu', 'Monday' => 'Senin', 'Tuesday' => 'Selasa',
             'Wednesday' => 'Rabu', 'Thursday' => 'Kamis', 'Friday' => 'Jumat', 'Saturday' => 'Sabtu'
         ];
-        $currentDayName = $dayNameMap[date('l')];
-        $setting = AbsensiSetting::where('day_name', $currentDayName)->first();
+        $englishDay = date('l');
+        $indonesianDay = $dayNameMap[$englishDay];
+
+        $setting = AbsensiSetting::whereIn('day_name', [$englishDay, $indonesianDay])->first();
 
         if (!$setting || $setting->status === 'libur') {
             return response()->json([
                 'success' => false,
+                'title'   => 'Hari Libur',
                 'message' => 'Hari ini adalah hari libur!'
             ]);
         }
@@ -99,7 +102,7 @@ class GuruController extends Controller
             $timeInOfficial = Carbon::parse($setting->time_in);
             $timeInLimit = $timeInOfficial->copy()->addMinutes($setting->late_tolerance_minutes);
 
-            // Jika scan melewati batas toleransi -> Terlambat
+            // Jika lewat batas toleransi -> TERLAMBAT
             $status = $nowTime->gt($timeInLimit) ? 'terlambat' : 'hadir';
 
             Absensi::create([
@@ -114,9 +117,11 @@ class GuruController extends Controller
                 'keterangan'     => '-',
             ]);
 
+            $statusText = ($status === 'terlambat') ? ' (Status: Terlambat)' : ' (Status: Tepat Waktu)';
+
             return response()->json([
                 'success' => true,
-                'message' => 'Absen masuk berhasil tercatat!'
+                'message' => 'Absen masuk berhasil tercatat!' . $statusText
             ]);
         }
 
@@ -125,16 +130,17 @@ class GuruController extends Controller
             if ($attendance->time_out) {
                 return response()->json([
                     'success' => false,
+                    'title'   => 'Sudah Absen Pulang',
                     'message' => 'Anda sudah melakukan absen pulang hari ini!'
                 ]);
             }
 
             $timeOutOfficial = Carbon::parse($setting->time_out);
 
-            // Tolak jika belum jam pulang
             if ($nowTime->lt($timeOutOfficial)) {
                 return response()->json([
                     'success' => false,
+                    'title'   => 'Belum Waktunya Pulang',
                     'message' => 'Belum waktunya pulang! Jam pulang hari ini adalah ' . $timeOutOfficial->format('H:i') . ' WIB.'
                 ]);
             }
