@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Absensi extends Model
 {
+    use HasFactory;
+
+    protected $table = 'absensis';
+
     protected $fillable = [
         'user_id',
         'absensi_key_id',
@@ -17,17 +22,11 @@ class Absensi extends Model
         'user_latitude',
         'user_longitude',
         'status',
+        'keterangan',
     ];
 
-    // Relasi ke User
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    // Relasi ke AbsensiKey
-    public function absensiKey()
-    {
-        return $this->belongsTo(AbsensiKey::class);
     }
 }

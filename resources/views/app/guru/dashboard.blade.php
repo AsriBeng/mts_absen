@@ -48,23 +48,30 @@
         {{-- Grid Kartu Presensi --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-            {{-- Card Action: Scan Barcode --}}
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center flex flex-col items-center justify-center">
+            {{-- Card Action: Scan Barcode & Tombol Izin --}}
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center flex flex-col items-center justify-center gap-3">
                 @if (($todaySetting->status ?? 'masuk') === 'libur')
                     <button disabled
-                        class="inline-flex flex-col items-center justify-center w-32 h-32 bg-slate-300 text-slate-500 rounded-full shadow-md border-4 border-slate-100 cursor-not-allowed">
-                        <i class="fas fa-calendar-times text-3xl mb-1"></i>
-                        <span class="text-[11px] font-bold uppercase tracking-wider">Hari Libur</span>
+                        class="inline-flex flex-col items-center justify-center w-28 h-28 bg-slate-300 text-slate-500 rounded-full shadow-md border-4 border-slate-100 cursor-not-allowed">
+                        <i class="fas fa-calendar-times text-2xl mb-1"></i>
+                        <span class="text-[10px] font-bold uppercase tracking-wider">Hari Libur</span>
                     </button>
-                    <p class="text-xs text-rose-500 font-semibold mt-3">Tidak ada kegiatan presensi hari ini</p>
+                    <p class="text-xs text-rose-500 font-semibold">Tidak ada kegiatan presensi hari ini</p>
                 @else
                     <button @click="openScanModal()"
-                        class="inline-flex flex-col items-center justify-center w-32 h-32 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-full shadow-lg shadow-emerald-600/20 border-4 border-emerald-100 transition duration-200 cursor-pointer">
-                        <i class="fas fa-qrcode text-3xl mb-1"></i>
-                        <span class="text-[11px] font-bold uppercase tracking-wider">Scan Barcode</span>
+                        class="inline-flex flex-col items-center justify-center w-28 h-28 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-full shadow-lg shadow-emerald-600/20 border-4 border-emerald-100 transition duration-200 cursor-pointer">
+                        <i class="fas fa-qrcode text-2xl mb-1"></i>
+                        <span class="text-[10px] font-bold uppercase tracking-wider">Scan Barcode</span>
                     </button>
-                    <p class="text-xs text-slate-400 mt-3">Arahkan kamera ke QR Code papan sekolah</p>
+                    <p class="text-xs text-slate-400">Arahkan kamera ke QR Code papan sekolah</p>
                 @endif
+
+                {{-- TOMBOL AJUKAN IZIN --}}
+                <a href="{{ route('guru.izin') }}"
+                    class="w-full mt-2 py-2.5 px-4 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition">
+                    <i class="fas fa-envelope-open-text text-sm"></i>
+                    <span>Ajukan Izin / Sakit</span>
+                </a>
             </div>
 
             {{-- Status Log Masuk & Pulang --}}
@@ -78,8 +85,11 @@
                         </p>
                     </div>
                     <div class="mt-4 flex items-center justify-between">
-                        @if (isset($todayAttendance->time_in))
-                            <span class="px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-full text-xs font-bold">
+                        @if (isset($todayAttendance))
+                            <span class="px-3 py-1 rounded-full text-xs font-bold
+                                {{ $todayAttendance->status === 'hadir' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : '' }}
+                                {{ $todayAttendance->status === 'terlambat' ? 'bg-amber-50 text-amber-600 border border-amber-100' : '' }}
+                                {{ $todayAttendance->status === 'izin' ? 'bg-blue-50 text-blue-600 border border-blue-100' : '' }}">
                                 {{ ucfirst($todayAttendance->status) }}
                             </span>
                         @elseif (($todaySetting->status ?? 'masuk') === 'libur')
@@ -110,6 +120,10 @@
                         @if (isset($todayAttendance->time_out))
                             <span class="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-100 rounded-full text-xs font-bold">
                                 Sudah Pulang
+                            </span>
+                        @elseif (isset($todayAttendance) && $todayAttendance->status === 'izin')
+                            <span class="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-100 rounded-full text-xs font-bold">
+                                Izin
                             </span>
                         @elseif (($todaySetting->status ?? 'masuk') === 'libur')
                             <span class="px-3 py-1 bg-rose-50 text-rose-600 border border-rose-100 rounded-full text-xs font-bold">

@@ -72,11 +72,11 @@ Route::middleware(['auth'])->group(function () {
     // === GROUP GURU ===
     Route::prefix('guru')->name('guru.')->group(function () {
         Route::get('/dashboard', [GuruController::class, 'index'])->name('dashboard');
-        // Pemrosesan Scan dialihkan ke GuruController
         Route::post('/absen-saya/scan', [GuruController::class, 'storeScan'])->name('absen_saya.scan');
-        // Menu Absen Saya (Rekap Riwayat Pribadi)
         Route::get('/absen-saya', [AbsenSayaController::class, 'index'])->name('absen_saya');
         Route::get('/absen-saya/export-pdf', [AbsenSayaController::class, 'exportPdf'])->name('absen_saya.export_pdf');
+        Route::get('/izin', [GuruController::class, 'izinForm'])->name('izin');
+        Route::post('/izin', [GuruController::class, 'storeIzin'])->name('izin.store');
 
         // Profile & Setting Guru
         Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile');

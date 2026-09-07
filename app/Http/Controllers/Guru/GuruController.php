@@ -150,4 +150,65 @@ class GuruController extends Controller
             ]);
         }
     }
+    /**
+     * Tampilan Halaman Form Izin
+     */
+    public function izinForm()
+    {
+        $userId = Auth::id();
+        $today = date('Y-m-d');
+
+        // Cek jika sudah presensi/izin hari ini
+        $alreadyAbsence = Absensi::where('user_id', $userId)
+            ->where('date', $today)
+            ->first();
+
+        if ($alreadyAbsence) {
+            return redirect()->route('guru.dashboard')->with('error', 'Anda sudah melakukan presensi/izin hari ini!');
+        }
+
+        return view('app.guru.izin');
+    }
+
+    /**
+     * Simpan Data Izin Guru (Bukti disimpan ke image_in)
+     */
+    public function storeIzin(Request $request)
+    {
+        $request->validate([
+            'keterangan' => 'required|string',
+            'bukti'      => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $userId = Auth::id();
+        $today = date('Y-m-d');
+
+        // Cek kembali ketersediaan data hari ini
+        $alreadyAbsence = Absensi::where('user_id', $userId)
+            ->where('date', $today)
+            ->first();
+
+        if ($alreadyAbsence) {
+            return redirect()->route('guru.dashboard')->with('error', 'Anda sudah melakukan presensi/izin hari ini!');
+        }
+
+        // Upload Gambar Bukti ke Storage (Storage disk public)
+        if ($request->hasFile('bukti')) {
+            $file = $request->file('bukti');
+            $fileName = 'bukti_izin_' . Str::random(10) . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs('absensi', $fileName, 'public');
+        }
+
+        // Simpan ke database dengan status 'izin' dan bukti di 'image_in'
+        Absensi::create([
+            'user_id'    => $userId,
+            'date'       => $today,
+            'time_in'    => Carbon::now('Asia/Jakarta')->format('H:i:s'),
+            'status'     => 'izin',
+            'image_in'   => $filePath ?? null, // Foto bukti diletakkan di image_in
+            'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->route('guru.dashboard')->with('success', 'Pengajuan izin berhasil disimpan!');
+    }
 }

@@ -18,12 +18,12 @@ return new class extends Migration
             $table->date('date');
             $table->time('time_in')->nullable();
             $table->time('time_out')->nullable();
-            $table->string('image_in')->nullable();  // Foto selfie masuk
+            $table->string('image_in')->nullable();  // Foto selfie masuk / bukti izin
             $table->string('image_out')->nullable(); // Foto selfie pulang
             $table->decimal('user_latitude', 10, 8)->nullable();
             $table->decimal('user_longitude', 11, 8)->nullable();
             $table->enum('status', ['hadir', 'terlambat', 'izin', 'alpa']);
-            $table->string('keterangan');
+            $table->text('keterangan')->nullable();  // Diubah menjadi TEXT dan NULLABLE
             $table->timestamps();
         });
     }
