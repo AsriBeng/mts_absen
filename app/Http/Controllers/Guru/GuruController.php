@@ -41,6 +41,7 @@ class GuruController extends Controller
 
     public function storeScan(Request $request)
     {
+        // Validasi input
         $request->validate([
             'qr_code'   => 'required',
             'image'     => 'required',
@@ -83,27 +84,43 @@ class GuruController extends Controller
             ]);
         }
 
-        // 3. Simpan Gambar Selfie
-        $image = $request->image;
-        $image = str_replace('data:image/png;base64,', '', $image);
-        $image = str_replace('data:image/jpeg;base64,', '', $image);
-        $image = str_replace(' ', '+', $image);
-        $imageName = 'selfie_' . Str::random(10) . '_' . time() . '.png';
-        Storage::disk('public')->put('absensi/' . $imageName, base64_decode($image));
-        $filePath = 'absensi/' . $imageName;
-
-        // 4. Cari Data Presensi Hari Ini
+        // 3. Cari Data Presensi Hari Ini
         $attendance = Absensi::where('user_id', $userId)
             ->where('date', $today)
             ->first();
 
-        // --- PROSES ABSEN MASUK ---
+        // ====================================================
+        // --- 1. PROSES ABSEN MASUK ---
+        // ====================================================
         if (!$attendance) {
             $timeInOfficial = Carbon::parse($setting->time_in);
-            $timeInLimit = $timeInOfficial->copy()->addMinutes($setting->late_tolerance_minutes);
 
-            // Jika lewat batas toleransi -> TERLAMBAT
-            $status = $nowTime->gt($timeInLimit) ? 'terlambat' : 'hadir';
+            // Batas Awal Buka Absen Masuk (3 jam sebelum time_in)
+            $timeInOpenLimit = $timeInOfficial->copy()->subHours(3);
+
+            // PENGECEKAN: Jika scan dilakukan sebelum jam buka (misal: < 04:00)
+            if ($nowTime->lt($timeInOpenLimit)) {
+                return response()->json([
+                    'success' => false,
+                    'title'   => 'Absen Belum Dibuka',
+                    'message' => 'Absen masuk belum dibuka! Absen masuk baru dibuka mulai pukul ' . $timeInOpenLimit->format('H:i') . ' WIB.'
+                ]);
+            }
+
+            // Simpan Foto Selfie untuk Absen Masuk
+            $image = $request->image;
+            $image = str_replace('data:image/png;base64,', '', $image);
+            $image = str_replace('data:image/jpeg;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = 'selfie_in_' . Str::random(10) . '_' . time() . '.png';
+            Storage::disk('public')->put('absensi/' . $imageName, base64_decode($image));
+            $filePath = 'absensi/' . $imageName;
+
+            // Batas Toleransi Terlambat
+            $timeInLateLimit = $timeInOfficial->copy()->addMinutes($setting->late_tolerance_minutes);
+
+            // Menentukan status kehadiran
+            $status = $nowTime->gt($timeInLateLimit) ? 'terlambat' : 'hadir';
 
             Absensi::create([
                 'user_id'        => $userId,
@@ -125,7 +142,9 @@ class GuruController extends Controller
             ]);
         }
 
-        // --- PROSES ABSEN PULANG ---
+        // ====================================================
+        // --- 2. PROSES ABSEN PULANG ---
+        // ====================================================
         else {
             if ($attendance->time_out) {
                 return response()->json([
@@ -137,17 +156,31 @@ class GuruController extends Controller
 
             $timeOutOfficial = Carbon::parse($setting->time_out);
 
+            // Batas Akhir Tutup Absen Pulang (3 jam setelah time_out)
+            $timeOutCloseLimit = $timeOutOfficial->copy()->addHours(3);
+
+            // PENGECEKAN 1: Jika belum waktunya pulang (jam scan < time_out)
             if ($nowTime->lt($timeOutOfficial)) {
                 return response()->json([
                     'success' => false,
                     'title'   => 'Belum Waktunya Pulang',
-                    'message' => 'Belum waktunya pulang! Jam pulang hari ini adalah ' . $timeOutOfficial->format('H:i') . ' WIB.'
+                    'message' => 'Belum waktunya pulang! Jam pulang hari ini adalah pukul ' . $timeOutOfficial->format('H:i') . ' WIB.'
                 ]);
             }
 
+            // PENGECEKAN 2: Jika sudah melewati batas 4 jam setelah time_out (misal: > 18:00 jika time_out 14:00)
+            if ($nowTime->gt($timeOutCloseLimit)) {
+                return response()->json([
+                    'success' => false,
+                    'title'   => 'Absen Telah Ditutup',
+                    'message' => 'Absen pulang telah ditutup! Batas waktu maksimal absen pulang adalah pukul ' . $timeOutCloseLimit->format('H:i') . ' WIB.'
+                ]);
+            }
+
+            // Update Jam Pulang (Tanpa menyimpan foto untuk menghemat storage)
             $attendance->update([
                 'time_out'  => $nowTime->format('H:i:s'),
-                'image_out' => $filePath,
+                'image_out' => null,
             ]);
 
             return response()->json([
