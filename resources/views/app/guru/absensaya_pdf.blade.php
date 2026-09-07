@@ -5,7 +5,7 @@
     <title>Laporan Presensi - {{ $user->name }}</title>
     <style>
         body { font-family: sans-serif; font-size: 12px; color: #333; margin: 20px; }
-        .header { text-align: center; border-b: 2px solid #059669; padding-bottom: 10px; margin-bottom: 20px; }
+        .header { text-align: center; border-bottom: 2px solid #059669; padding-bottom: 10px; margin-bottom: 20px; }
         .header h2 { margin: 0; color: #065f46; font-size: 18px; }
         .header p { margin: 2px 0; font-size: 11px; color: #666; }
         .info-table { width: 100%; margin-bottom: 15px; border-collapse: collapse; }
@@ -56,10 +56,11 @@
         <thead>
             <tr>
                 <th width="5%">No</th>
-                <th>Tanggal</th>
-                <th>Jam Masuk</th>
-                <th>Jam Pulang</th>
-                <th>Status</th>
+                <th width="15%">Tanggal</th>
+                <th width="12%">Jam Masuk</th>
+                <th width="12%">Jam Pulang</th>
+                <th width="12%">Status</th>
+                <th>Keterangan</th>
             </tr>
         </thead>
         <tbody>
@@ -74,10 +75,14 @@
                             {{ strtoupper($row->status) }}
                         </span>
                     </td>
+                    {{-- KOLOM KETERANGAN DENGAN CEK NULL DI PDF --}}
+                    <td>
+                        {{ !empty($row->keterangan) && $row->keterangan !== '-' ? $row->keterangan : '-' }}
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" style="text-align: center; color: #94a3b8;">
+                    <td colspan="6" style="text-align: center; color: #94a3b8;">
                         Tidak ada data presensi pada periode ini.
                     </td>
                 </tr>

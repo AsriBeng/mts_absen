@@ -110,6 +110,7 @@
                         <th class="px-6 py-3 font-semibold">Jam Masuk</th>
                         <th class="px-6 py-3 font-semibold">Jam Pulang</th>
                         <th class="px-6 py-3 font-semibold">Status</th>
+                        <th class="px-6 py-3 font-semibold">Keterangan</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -129,10 +130,14 @@
                                     <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-600">Alpa</span>
                                 @endif
                             </td>
+                            {{-- KOLOM KETERANGAN DENGAN CEK NULL --}}
+                            <td class="px-6 py-4 text-slate-500">
+                                {{ !empty($row->keterangan) && $row->keterangan !== '-' ? $row->keterangan : '-' }}
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-8 text-center text-slate-400 text-sm">
+                            <td colspan="5" class="px-6 py-8 text-center text-slate-400 text-sm">
                                 Tidak ada data presensi pada periode ini.
                             </td>
                         </tr>
