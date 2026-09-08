@@ -39,7 +39,7 @@
             <table class="w-full text-left text-sm text-slate-600">
                 <thead class="bg-slate-50 text-xs text-slate-400 uppercase border-b border-slate-100">
                     <tr>
-                        <th class="px-6 py-3 font-semibold">Nama Pengguna</th>
+                        <th class="px-6 py-3 font-semibold">Username</th>
                         <th class="px-6 py-3 font-semibold">Email</th>
                         <th class="px-6 py-3 font-semibold">Role / Hak Akses</th>
                         <th class="px-6 py-3 font-semibold text-center">Aksi</th>
@@ -104,7 +104,7 @@
                 <form action="{{ route('admin.users_setting.store') }}" method="POST" class="space-y-4">
                     @csrf
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Nama Lengkap</label>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Username</label>
                         <input type="text" name="name" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     </div>
                     <div>
@@ -147,7 +147,7 @@
                     @csrf
                     @method('PUT')
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Nama Lengkap</label>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Username</label>
                         <input type="text" name="name" x-model="editUser.name" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     </div>
                     <div>
