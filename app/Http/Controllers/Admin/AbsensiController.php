@@ -7,30 +7,32 @@ use App\Models\AbsensiKey;
 use App\Models\Absensi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class AbsensiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil data kunci barcode kantor yang aktif (jika belum ada, ambil null)
+        // 1. Ambil Kunci Barcode Aktif
         $activeKey = AbsensiKey::where('is_active', true)->first();
 
-        // Ambil data riwayat absensi hari ini
+        // 2. Tangkap Tanggal dari Filter (Default: Hari Ini)
+        $selectedDate = $request->get('date', now()->toDateString());
+
+        // 3. Ambil Data Absensi Berdasarkan Tanggal yang Dipilih
         $attendances = Absensi::with('user')
-            ->whereDate('date', now()->toDateString())
+            ->whereDate('date', $selectedDate)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('app.admin.absensi', compact('activeKey', 'attendances'));
+        return view('app.admin.absensi', compact('activeKey', 'attendances', 'selectedDate'));
     }
 
-    // Method untuk Generate Kunci Barcode Baru
+    // Method Generate Kunci Barcode Baru
     public function generateKey(Request $request)
     {
-        // Nonaktifkan kunci lama
         AbsensiKey::query()->update(['is_active' => false]);
 
-        // Buat kunci unik baru
         $newKey = 'ALHUDA-' . rand(1000, 9999) . '-' . strtoupper(Str::random(6));
 
         AbsensiKey::create([
