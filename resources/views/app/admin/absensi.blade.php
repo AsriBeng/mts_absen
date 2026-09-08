@@ -166,13 +166,14 @@
                         </button>
                     </div>
 
+                    {{-- Display QR Code --}}
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 inline-block mb-3">
                         @php
                             $code = $activeKey->key_code ?? 'KNT-ALHUDA-DEFAULT';
-                            $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=' . urlencode($code);
+                            $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=' . urlencode($code);
                         @endphp
                         <img id="qrImage" src="{{ $qrUrl }}" alt="QR Code Absensi"
-                            class="w-48 h-48 mx-auto object-contain rounded-lg shadow-sm">
+                            class="w-48 h-48 mx-auto object-contain rounded-lg shadow-sm" crossorigin="anonymous">
                     </div>
 
                     <p class="text-xs font-mono bg-slate-100 py-1.5 px-3 rounded-lg text-slate-600 font-semibold mb-6 inline-block">
@@ -188,8 +189,9 @@
                             </button>
                         </form>
 
+                        {{-- Tombol Download Poster Barcode --}}
                         <button type="button"
-                            onclick="downloadQRCode('{{ $qrUrl }}', 'QR_Absensi_{{ $code }}.png')"
+                            onclick="downloadPosterBarcode('{{ $qrUrl }}', 'Poster_Absensi_{{ $code }}.png')"
                             class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
                             <i class="fas fa-download"></i> Download
                         </button>
@@ -201,26 +203,59 @@
 
     </div>
 
-    {{-- Script JS Download QR Code --}}
+    {{-- SCRIPT GENERATE CANVAS POSTER BARCODE --}}
     <script>
-        async function downloadQRCode(imageUrl, fileName) {
+        async function downloadPosterBarcode(qrUrl, fileName) {
+            const bgImagePath = "{{ asset('image/barcode.png') }}";
+
             try {
-                const response = await fetch(imageUrl);
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
 
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = fileName;
-                document.body.appendChild(a);
-                a.click();
+                const bgImage = new Image();
+                bgImage.crossOrigin = "anonymous";
+                bgImage.src = bgImagePath;
 
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
+                await new Promise((resolve, reject) => {
+                    bgImage.onload = resolve;
+                    bgImage.onerror = () => reject("Gagal memuat template poster barcode.png");
+                });
+
+                canvas.width = bgImage.naturalWidth || bgImage.width;
+                canvas.height = bgImage.naturalHeight || bgImage.height;
+
+                ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+
+                const qrImage = new Image();
+                qrImage.crossOrigin = "anonymous";
+                qrImage.src = qrUrl;
+
+                await new Promise((resolve, reject) => {
+                    qrImage.onload = resolve;
+                    qrImage.onerror = () => reject("Gagal mengambil QR Code.");
+                });
+
+                // UKURAN DAN POSISI BARCODE
+                const qrSize = canvas.width * 0.72; // Ukuran QR Code tetap
+                const qrX = (canvas.width - qrSize) / 2; // Posisi horizontal (tengah)
+
+                // POSISI Y DIUBAH DARI 0.35 MENJADI 0.385 AGAR BARCODE TURUN SEDIKIT
+                const qrY = canvas.height * 0.366;
+
+                // Gambar QR Code di posisi baru
+                ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
+
+                const dataUrl = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
             } catch (error) {
-                console.error('Gagal mengunduh gambar QR:', error);
-                alert('Gagal mengunduh gambar. Silakan coba lagi.');
+                console.error('Error saat membuat poster QR:', error);
+                alert(error);
             }
         }
     </script>
