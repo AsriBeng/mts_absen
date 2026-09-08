@@ -24,13 +24,13 @@ class UserSettingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:255', // Input Username
+            'name'     => 'required|string|max:255', // Ini adalah Username
             'email'    => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
             'role_id'  => 'required|exists:roles,id',
         ]);
 
-        // 1. Buat User Baru
+        // 1. Buat User Baru (Username disimpan ke 'name')
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
@@ -38,13 +38,13 @@ class UserSettingController extends Controller
             'role_id'  => $request->role_id,
         ]);
 
-        // 2. Cek Role User
+        // 2. Cek Jika Role Guru -> Buat record di tabel guru tanpa mengisi nama_lengkap dengan username
         $role = Role::find($request->role_id);
         if ($role && strtolower($role->name) === 'guru') {
             Guru::create([
-                'user_id'      => $user->id,
-                'nama_lengkap' => $user->name,
-                'email'        => $user->email,
+                'user_id' => $user->id,
+                'email'   => $user->email,
+                // nama_lengkap dibiarkan NULL agar diisi mandiri via Edit Profil
             ]);
         }
 
@@ -74,18 +74,14 @@ class UserSettingController extends Controller
 
         $user->update($data);
 
-        // Sinkronisasi data di tabel Guru jika rolenya Guru
+        // Synchronize email pada tabel guru
         $role = Role::find($request->role_id);
         if ($role && strtolower($role->name) === 'guru') {
             Guru::updateOrCreate(
                 ['user_id' => $user->id],
-                [
-                    'nama_lengkap' => $user->name,
-                    'email'        => $user->email,
-                ]
+                ['email'   => $user->email]
             );
         } else {
-            // Jika role diubah dari Guru ke Admin, hapus data guru-nya jika ada
             Guru::where('user_id', $user->id)->delete();
         }
 
@@ -101,7 +97,6 @@ class UserSettingController extends Controller
             return redirect()->back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri!');
         }
 
-        // Hapus data guru terlebih dahulu jika ada (atau otomatis via onDelete cascade di DB)
         Guru::where('user_id', $user->id)->delete();
         $user->delete();
 
