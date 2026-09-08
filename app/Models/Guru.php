@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Guru extends Model
 {
+    protected $table = 'guru'; // Mengarahkan ke tabel guru (bukan gurus)
+
     protected $fillable = [
         'user_id',
+        'nama_lengkap',
+        'email',
         'nip',
         'nik',
-        'nama_lengkap',
-        'email', // <-- Tambahkan ke $fillable
         'gelar_depan',
         'gelar_belakang',
         'jenis_kelamin',
