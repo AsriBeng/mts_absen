@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('office_latitude', 10, 8);
             $table->decimal('office_longitude', 11, 8);
             $table->integer('radius_meters')->default(50);
+            $table->enum('status', ['masuk', 'libur'])->default('masuk'); // Kolom status disatukan di sini
             $table->timestamps();
         });
     }
