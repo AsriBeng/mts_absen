@@ -7,6 +7,8 @@
 
     {{-- Tailwind CSS & FontAwesome --}}
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Mengganti Icon Browser (Favicon) -->
+    <link rel="icon" type="image/png" href="{{ asset('image/favicon.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     {{-- Alpine.js --}}
