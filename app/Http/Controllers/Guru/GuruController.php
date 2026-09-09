@@ -40,7 +40,20 @@ class GuruController extends Controller
     }
 
     public function storeScan(Request $request)
-        {
+    {
+        $userId = Auth::id();
+        $today = date('Y-m-d');
+        $nowTime = Carbon::now('Asia/Jakarta');
+
+        // 1. Cari Data Presensi Hari Ini
+        $attendance = Absensi::where('user_id', $userId)
+            ->where('date', $today)
+            ->first();
+
+        // ====================================================
+        // --- 1. PROSES ABSEN MASUK (BUTUH BARCODE & SELFIE) ---
+        // ====================================================
+        if (!$attendance) {
             $request->validate([
                 'qr_code'   => 'required',
                 'image'     => 'required',
@@ -48,11 +61,7 @@ class GuruController extends Controller
                 'longitude' => 'required|numeric',
             ]);
 
-            $userId = Auth::id();
-            $today = date('Y-m-d');
-            $nowTime = Carbon::now('Asia/Jakarta');
-
-            // 1. Cek Kunci QR Code
+            // Cek Kunci QR Code
             $activeKey = AbsensiKey::where('key_code', $request->qr_code)
                 ->where('is_active', true)
                 ->first();
@@ -65,7 +74,7 @@ class GuruController extends Controller
                 ]);
             }
 
-            // 2. Ambil Setting Hari Ini
+            // Ambil Setting Hari Ini
             $dayNameMap = [
                 'Sunday' => 'Minggu', 'Monday' => 'Senin', 'Tuesday' => 'Selasa',
                 'Wednesday' => 'Rabu', 'Thursday' => 'Kamis', 'Friday' => 'Jumat', 'Saturday' => 'Sabtu'
@@ -83,14 +92,8 @@ class GuruController extends Controller
                 ]);
             }
 
-            // --- VALIDASI GEOLOKASI GPS RADIUS (GEOFENCING) ---
-            $userLat = $request->latitude;
-            $userLng = $request->longitude;
-            $officeLat = $setting->office_latitude;
-            $officeLng = $setting->office_longitude;
-
-            $distance = $this->calculateDistance($userLat, $userLng, $officeLat, $officeLng);
-
+            // Validasi Geofencing GPS Radius
+            $distance = $this->calculateDistance($request->latitude, $request->longitude, $setting->office_latitude, $setting->office_longitude);
             if ($distance > $setting->radius_meters) {
                 return response()->json([
                     'success' => false,
@@ -99,97 +102,112 @@ class GuruController extends Controller
                 ]);
             }
 
-            // 3. Cari Data Presensi Hari Ini
-            $attendance = Absensi::where('user_id', $userId)
-                ->where('date', $today)
-                ->first();
+            // Cek Batas Awal Buka Absen Masuk (3 Jam sebelum time_in)
+            $timeInOfficial = Carbon::parse($setting->time_in);
+            $timeInStart = $timeInOfficial->copy()->subHours(3);
 
-            // --- PROSES ABSEN MASUK ---
-            if (!$attendance) {
-                // Cek Batas Waktu Buka Absen Masuk (3 Jam sebelum time_in)
-                $timeInOfficial = Carbon::parse($setting->time_in);
-                $timeInStart = $timeInOfficial->copy()->subHours(3);
-
-                if ($nowTime->lt($timeInStart)) {
-                    return response()->json([
-                        'success' => false,
-                        'title'   => 'Absen Belum Dibuka',
-                        'message' => 'Absen masuk belum dibuka. Absen dibuka mulai jam ' . $timeInStart->format('H:i') . ' WIB.'
-                    ]);
-                }
-
-                // Simpan foto selfie masuk
-                $image = $request->image;
-                $image = str_replace('data:image/png;base64,', '', $image);
-                $image = str_replace('data:image/jpeg;base64,', '', $image);
-                $image = str_replace(' ', '+', $image);
-                $imageName = 'selfie_in_' . Str::random(10) . '_' . time() . '.png';
-                Storage::disk('public')->put('absensi/' . $imageName, base64_decode($image));
-                $filePath = 'absensi/' . $imageName;
-
-                $timeInLimit = $timeInOfficial->copy()->addMinutes($setting->late_tolerance_minutes);
-                $status = $nowTime->gt($timeInLimit) ? 'terlambat' : 'hadir';
-
-                Absensi::create([
-                    'user_id'        => $userId,
-                    'absensi_key_id' => $activeKey->id,
-                    'date'           => $today,
-                    'time_in'        => $nowTime->format('H:i:s'),
-                    'status'         => $status,
-                    'image_in'       => $filePath,
-                    'user_latitude'  => $userLat,
-                    'user_longitude' => $userLng,
-                    'keterangan'     => '-',
-                ]);
-
-                $statusText = ($status === 'terlambat') ? ' (Status: Terlambat)' : ' (Status: Tepat Waktu)';
-
+            if ($nowTime->lt($timeInStart)) {
                 return response()->json([
-                    'success' => true,
-                    'message' => 'Absen masuk berhasil tercatat!' . $statusText
+                    'success' => false,
+                    'title'   => 'Absen Belum Dibuka',
+                    'message' => 'Absen masuk belum dibuka. Absen dibuka mulai jam ' . $timeInStart->format('H:i') . ' WIB.'
                 ]);
             }
 
-            // --- PROSES ABSEN PULANG ---
-            else {
-                if ($attendance->time_out) {
+            // Simpan Foto Selfie Masuk
+            $image = $request->image;
+            $image = str_replace(['data:image/png;base64,', 'data:image/jpeg;base64,', ' '], ['', '', '+'], $image);
+            $imageName = 'selfie_in_' . Str::random(10) . '_' . time() . '.png';
+            Storage::disk('public')->put('absensi/' . $imageName, base64_decode($image));
+            $filePath = 'absensi/' . $imageName;
+
+            // Batas Toleransi Terlambat
+            $timeInLimit = $timeInOfficial->copy()->addMinutes($setting->late_tolerance_minutes);
+            $status = $nowTime->gt($timeInLimit) ? 'terlambat' : 'hadir';
+
+            Absensi::create([
+                'user_id'        => $userId,
+                'absensi_key_id' => $activeKey->id,
+                'date'           => $today,
+                'time_in'        => $nowTime->format('H:i:s'),
+                'status'         => $status,
+                'image_in'       => $filePath,
+                'user_latitude'  => $request->latitude,
+                'user_longitude' => $request->longitude,
+                'keterangan'     => '-',
+            ]);
+
+            $statusText = ($status === 'terlambat') ? ' (Status: Terlambat)' : ' (Status: Tepat Waktu)';
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Absen masuk berhasil tercatat!' . $statusText
+            ]);
+        }
+
+        // ====================================================
+        // --- 2. PROSES ABSEN PULANG (FLEKSIBEL & TANPA BARCODE) ---
+        // ====================================================
+        else {
+            if ($attendance->time_out) {
+                return response()->json([
+                    'success' => false,
+                    'title'   => 'Sudah Absen Pulang',
+                    'message' => 'Anda sudah melakukan absen pulang hari ini!'
+                ]);
+            }
+
+            $request->validate([
+                'image'     => 'required',
+                'latitude'  => 'required|numeric',
+                'longitude' => 'required|numeric',
+            ]);
+
+            // Ambil Setting Hari Ini untuk Pengecekan GPS Radius & Batas Maksimal
+            $dayNameMap = [
+                'Sunday' => 'Minggu', 'Monday' => 'Senin', 'Tuesday' => 'Selasa',
+                'Wednesday' => 'Rabu', 'Thursday' => 'Kamis', 'Friday' => 'Jumat', 'Saturday' => 'Sabtu'
+            ];
+            $englishDay = date('l');
+            $indonesianDay = $dayNameMap[$englishDay];
+            $setting = AbsensiSetting::whereIn('day_name', [$englishDay, $indonesianDay])->first();
+
+            if ($setting) {
+                // Validasi Geofencing Radius GPS
+                $distance = $this->calculateDistance($request->latitude, $request->longitude, $setting->office_latitude, $setting->office_longitude);
+                if ($distance > $setting->radius_meters) {
                     return response()->json([
                         'success' => false,
-                        'title'   => 'Sudah Absen Pulang',
-                        'message' => 'Anda sudah melakukan absen pulang hari ini!'
+                        'title'   => 'Luar Area Sekolah',
+                        'message' => 'Absen ditolak! Anda tidak berada dalam area sekolah.'
                     ]);
                 }
 
+                // Batas Akhir Tutup Absen Pulang (4 jam setelah time_out)
                 $timeOutOfficial = Carbon::parse($setting->time_out);
                 $timeOutEnd = $timeOutOfficial->copy()->addHours(4);
-
-                if ($nowTime->lt($timeOutOfficial)) {
-                    return response()->json([
-                        'success' => false,
-                        'title'   => 'Belum Waktunya Pulang',
-                        'message' => 'Belum waktunya pulang! Jam pulang hari ini adalah ' . $timeOutOfficial->format('H:i') . ' WIB.'
-                    ]);
-                }
 
                 if ($nowTime->gt($timeOutEnd)) {
                     return response()->json([
                         'success' => false,
                         'title'   => 'Absen Telah Ditutup',
-                        'message' => 'Absen pulang telah ditutup. Batas waktu absen pulang adalah jam ' . $timeOutEnd->format('H:i') . ' WIB.'
+                        'message' => 'Absen pulang telah ditutup. Batas waktu maksimal adalah jam ' . $timeOutEnd->format('H:i') . ' WIB.'
                     ]);
                 }
-
-                $attendance->update([
-                    'time_out'  => $nowTime->format('H:i:s'),
-                    'image_out' => null,
-                ]);
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Absen pulang berhasil tercatat!'
-                ]);
             }
+
+            // Update Jam Pulang tanpa menyimpan foto ke storage
+            $attendance->update([
+                'time_out'  => $nowTime->format('H:i:s'),
+                'image_out' => null,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Absen pulang berhasil tercatat!'
+            ]);
         }
+    }
 
     /**
      * Hitung jarak dua titik koordinat GPS (dalam meter)

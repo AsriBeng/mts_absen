@@ -48,7 +48,7 @@
         {{-- Grid Kartu Presensi --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-            {{-- Card Action: Scan Barcode & Tombol Izin --}}
+            {{-- Card Action: Scan Barcode / Absen Pulang & Tombol Izin --}}
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center flex flex-col items-center justify-center gap-3">
                 @if (($todaySetting->status ?? 'masuk') === 'libur')
                     <button disabled
@@ -57,8 +57,25 @@
                         <span class="text-[10px] font-bold uppercase tracking-wider">Hari Libur</span>
                     </button>
                     <p class="text-xs text-rose-500 font-semibold">Tidak ada kegiatan presensi hari ini</p>
+                @elseif (isset($todayAttendance->time_out))
+                    {{-- Sudah Absen Masuk & Pulang --}}
+                    <button disabled
+                        class="inline-flex flex-col items-center justify-center w-28 h-28 bg-blue-100 text-blue-600 rounded-full shadow-md border-4 border-blue-50 cursor-not-allowed">
+                        <i class="fas fa-check-double text-2xl mb-1"></i>
+                        <span class="text-[10px] font-bold uppercase tracking-wider">Selesai Presensi</span>
+                    </button>
+                    <p class="text-xs text-blue-600 font-semibold">Selesai presensi hari ini</p>
+                @elseif (isset($todayAttendance->time_in))
+                    {{-- Sudah Absen Masuk -> Tombol Berubah Menjadi Absen Pulang --}}
+                    <button @click="openScanModal(true)"
+                        class="inline-flex flex-col items-center justify-center w-28 h-28 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-full shadow-lg shadow-blue-600/20 border-4 border-blue-100 transition duration-200 cursor-pointer">
+                        <i class="fas fa-sign-out-alt text-2xl mb-1"></i>
+                        <span class="text-[10px] font-bold uppercase tracking-wider">Absen Pulang</span>
+                    </button>
+                    <p class="text-xs text-slate-400">Klik untuk selfie & verifikasi lokasi pulang</p>
                 @else
-                    <button @click="openScanModal()"
+                    {{-- Belum Absen Masuk -> Tombol Scan Barcode --}}
+                    <button @click="openScanModal(false)"
                         class="inline-flex flex-col items-center justify-center w-28 h-28 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-full shadow-lg shadow-emerald-600/20 border-4 border-emerald-100 transition duration-200 cursor-pointer">
                         <i class="fas fa-qrcode text-2xl mb-1"></i>
                         <span class="text-[10px] font-bold uppercase tracking-wider">Scan Barcode</span>
@@ -320,14 +337,25 @@
                     }
                 },
 
-                openScanModal() {
+                openScanModal(isPulang = false) {
                     this.showScanModal = true;
-                    this.step = 1;
                     this.capturedImage = '';
                     this.isLocationReady = false;
-                    this.$nextTick(() => {
-                        this.startScanner();
-                    });
+
+                    if (isPulang) {
+                        // JIKA ABSEN PULANG: Bypass Langkah 1 (Barcode) & Langsung ke Langkah 2 (Selfie & GPS)
+                        this.step = 2;
+                        this.$nextTick(() => {
+                            this.startSelfieCamera();
+                            this.getLocation();
+                        });
+                    } else {
+                        // JIKA ABSEN MASUK: Buka Langkah 1 (Scan QR Barcode)
+                        this.step = 1;
+                        this.$nextTick(() => {
+                            this.startScanner();
+                        });
+                    }
                 },
 
                 startScanner() {
