@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Absensi;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -23,13 +24,24 @@ class RekapController extends Controller
 
     private function getRekapData(Request $request)
     {
-        // Tangkap Filter (Default: harian)
+        // Tangkap Filter
         $filterType = $request->get('filter_type', 'harian');
         $selectedDate = $request->get('date', now()->toDateString());
         $selectedMonth = $request->get('month', date('m'));
         $selectedYear = $request->get('year', date('Y'));
+        $selectedUserId = $request->get('user_id'); // Filter Per Guru/Individu
+
+        // Ambil daftar user/guru untuk dropdown
+        $gurus = User::whereHas('role', function($q) {
+            $q->where('name', 'guru');
+        })->orWhereDoesntHave('role')->orderBy('name', 'asc')->get();
 
         $query = Absensi::with('user');
+
+        // Logika Filter Per Guru / Individu
+        if (!empty($selectedUserId)) {
+            $query->where('user_id', $selectedUserId);
+        }
 
         // Logika Filter Periode
         if ($filterType === 'harian') {
@@ -65,10 +77,12 @@ class RekapController extends Controller
 
         return compact(
             'attendances',
+            'gurus',
             'filterType',
             'selectedDate',
             'selectedMonth',
             'selectedYear',
+            'selectedUserId',
             'periodeText',
             'stats'
         );

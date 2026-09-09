@@ -10,7 +10,20 @@
     <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
         <form action="{{ route('admin.rekap') }}" method="GET" class="flex flex-col lg:flex-row items-end justify-between gap-4">
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full lg:w-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full lg:w-auto">
+
+                {{-- Select Filter Guru / Individu --}}
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Pilih Guru / Individu</label>
+                    <select name="user_id" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="">-- Semua Guru --</option>
+                        @foreach($gurus as $guru)
+                            <option value="{{ $guru->id }}" {{ $selectedUserId == $guru->id ? 'selected' : '' }}>
+                                {{ $guru->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
                 {{-- Select Tipe Filter --}}
                 <div>
@@ -101,7 +114,12 @@
         <div class="p-5 border-b border-slate-100 flex items-center justify-between">
             <div>
                 <h3 class="font-bold text-slate-800">Laporan Detail Presensi</h3>
-                <p class="text-xs text-slate-400 mt-0.5">Periode: <span class="font-semibold text-emerald-600">{{ $periodeText }}</span></p>
+                <p class="text-xs text-slate-400 mt-0.5">
+                    Periode: <span class="font-semibold text-emerald-600">{{ $periodeText }}</span>
+                    @if($selectedUserId)
+                        | Guru: <span class="font-semibold text-emerald-600">{{ $gurus->firstWhere('id', $selectedUserId)->name ?? '-' }}</span>
+                    @endif
+                </p>
             </div>
             <span class="text-xs bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full border border-emerald-100">
                 Total Record: {{ $attendances->count() }}
