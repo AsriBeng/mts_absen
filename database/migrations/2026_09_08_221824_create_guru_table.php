@@ -15,10 +15,10 @@ return new class extends Migration
             // Data Pribadi Guru
             $table->string('nip', 30)->unique()->nullable(); // NIP/NUPTK
             $table->string('nik', 16)->unique()->nullable(); // NIK KTP
-            $table->string('nama_lengkap');
+            $table->string('nama_lengkap')->nullable();
             $table->string('gelar_depan')->nullable();
             $table->string('gelar_belakang')->nullable();
-            $table->enum('jenis_kelamin', ['L', 'P']);
+            $table->enum('jenis_kelamin', ['L', 'P'])->nullable();
             $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->enum('agama', ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu'])->default('Islam');
