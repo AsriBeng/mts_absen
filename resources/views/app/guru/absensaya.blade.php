@@ -15,7 +15,7 @@
                 {{-- Select Tipe Filter --}}
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Periode Rekap</label>
-                    <select name="filter_type" x-model="type" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <select name="filter_type" x-model="type" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="mingguan">Mingguan</option>
                         <option value="bulanan">Bulanan</option>
                         <option value="tahunan">Tahunan</option>
@@ -25,13 +25,13 @@
                 {{-- Input Tanggal Mulai (Khusus Mingguan) --}}
                 <div x-show="type === 'mingguan'">
                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Tanggal Mulai (7 Hari)</label>
-                    <input type="date" name="date" value="{{ $selectedDate }}" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <input type="date" name="date" value="{{ $selectedDate }}" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
                 {{-- Select Bulan (Khusus Bulanan) --}}
                 <div x-show="type === 'bulanan'">
                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Bulan</label>
-                    <select name="month" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <select name="month" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         @foreach(range(1, 12) as $m)
                             <option value="{{ sprintf('%02d', $m) }}" {{ $selectedMonth == sprintf('%02d', $m) ? 'selected' : '' }}>
                                 {{ DateTime::createFromFormat('!m', $m)->format('F') }}
@@ -43,7 +43,7 @@
                 {{-- Select Tahun (Bulanan & Tahunan) --}}
                 <div x-show="type === 'bulanan' || type === 'tahunan'">
                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Tahun</label>
-                    <select name="year" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <select name="year" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         @foreach(range(date('Y'), date('Y') - 4) as $y)
                             <option value="{{ $y }}" {{ $selectedYear == $y ? 'selected' : '' }}>{{ $y }}</option>
                         @endforeach
@@ -54,7 +54,7 @@
 
             {{-- Tombol Filter & Cetak Export --}}
             <div class="flex items-center gap-2 w-full lg:w-auto">
-                <button type="submit" class="flex-1 lg:flex-none px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl transition shadow-sm flex items-center justify-center gap-2">
+                <button type="submit" class="flex-1 lg:flex-none px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl transition shadow-sm flex items-center justify-center gap-2">
                     <i class="fas fa-filter"></i>
                     <span>Terapkan Filter</span>
                 </button>
@@ -74,7 +74,7 @@
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
             <span class="text-xs text-slate-400 uppercase font-semibold">Hadir Tepat Waktu</span>
-            <p class="text-xl font-bold text-emerald-600 mt-1">{{ $stats['total_hadir'] }}</p>
+            <p class="text-xl font-bold text-blue-600 mt-1">{{ $stats['total_hadir'] }}</p>
         </div>
         <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
             <span class="text-xs text-slate-400 uppercase font-semibold">Terlambat</span>
@@ -95,9 +95,9 @@
         <div class="p-5 border-b border-slate-100 flex items-center justify-between">
             <div>
                 <h3 class="font-bold text-slate-800">Riwayat Presensi Pribadi</h3>
-                <p class="text-xs text-slate-400 mt-0.5">Periode: <span class="font-semibold text-emerald-600">{{ $periodeText }}</span></p>
+                <p class="text-xs text-slate-400 mt-0.5">Periode: <span class="font-semibold text-blue-600">{{ $periodeText }}</span></p>
             </div>
-            <span class="text-xs bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full border border-emerald-100">
+            <span class="text-xs bg-blue-50 text-blue-700 font-bold px-3 py-1 rounded-full border border-blue-100">
                 Total Kehadiran: {{ $attendances->count() }} Hari
             </span>
         </div>
@@ -121,7 +121,7 @@
                             <td class="px-6 py-4 text-slate-400">{{ $row->time_out ?? '-' }}</td>
                             <td class="px-6 py-4">
                                 @if($row->status === 'hadir')
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600">Hadir</span>
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-600">Hadir</span>
                                 @elseif($row->status === 'terlambat')
                                     <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-600">Terlambat</span>
                                 @elseif($row->status === 'izin')

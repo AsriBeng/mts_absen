@@ -8,9 +8,9 @@
 
         {{-- Alert Notifikasi Success / Error --}}
         @if (session('success'))
-            <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 p-4 rounded-xl shadow-sm flex justify-between items-center text-sm">
+            <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 rounded-xl shadow-sm flex justify-between items-center text-sm">
                 <span>{{ session('success') }}</span>
-                <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 font-bold">&times;</button>
+                <button onclick="this.parentElement.remove()" class="text-blue-500 hover:text-blue-700 font-bold">&times;</button>
             </div>
         @endif
 
@@ -21,28 +21,31 @@
             </div>
         @endif
 
-        {{-- Widget Hari & Jam Digital --}}
-        <div class="bg-gradient-to-r from-emerald-800 to-emerald-600 rounded-2xl p-6 text-white shadow-sm relative overflow-hidden">
+        {{-- Widget Hari & Jam Digital Real-time (Gradien Biru Muda ke Biru Gelap) --}}
+        <div class="bg-gradient-to-r from-sky-500 via-blue-700 to-slate-900 rounded-2xl p-6 text-white shadow-md relative overflow-hidden">
             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
                 <div>
-                    <p class="text-xs uppercase tracking-wider font-semibold text-emerald-200">
+                    <p class="text-xs uppercase tracking-wider font-semibold text-sky-100">
                         {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y') }}
                     </p>
-                    <h3 class="text-3xl font-extrabold mt-1 tracking-wider">
+                    <h3 class="text-3xl font-extrabold mt-1 tracking-wider text-white">
                         <span id="realtime-clock">{{ date('H:i:s') }}</span>
-                        <span class="text-sm font-normal">WIB</span>
+                        <span class="text-sm font-normal text-sky-100">WIB</span>
                     </h3>
                 </div>
-                <div class="text-xs bg-emerald-900/40 backdrop-blur-md px-4 py-2 rounded-xl border border-emerald-400/30">
-                    <i class="fas fa-info-circle mr-1 text-emerald-300"></i>
+                <div class="text-xs bg-slate-950/40 backdrop-blur-md px-4 py-2 rounded-xl border border-sky-300/30 text-white shadow-inner">
+                    <i class="fas fa-info-circle mr-1 text-sky-300"></i>
                     Status Hari Ini:
                     @if (($todaySetting->status ?? 'masuk') === 'libur')
                         <span class="font-bold text-rose-300">Hari Libur</span>
                     @else
-                        <span class="font-bold text-emerald-200">Jam Kerja Normal</span>
+                        <span class="font-bold text-sky-200">Jam Kerja Normal</span>
                     @endif
                 </div>
             </div>
+            {{-- Ornament Blur Effect --}}
+            <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-sky-400/20 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -left-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
         </div>
 
         {{-- Grid Kartu Presensi --}}
@@ -60,23 +63,23 @@
                 @elseif (isset($todayAttendance->time_out))
                     {{-- Sudah Absen Masuk & Pulang --}}
                     <button disabled
-                        class="inline-flex flex-col items-center justify-center w-28 h-28 bg-blue-100 text-blue-600 rounded-full shadow-md border-4 border-blue-50 cursor-not-allowed">
+                        class="inline-flex flex-col items-center justify-center w-28 h-28 bg-sky-100 text-sky-600 rounded-full shadow-md border-4 border-sky-50 cursor-not-allowed">
                         <i class="fas fa-check-double text-2xl mb-1"></i>
                         <span class="text-[10px] font-bold uppercase tracking-wider">Selesai Presensi</span>
                     </button>
-                    <p class="text-xs text-blue-600 font-semibold">Selesai presensi hari ini</p>
+                    <p class="text-xs text-sky-600 font-semibold">Selesai presensi hari ini</p>
                 @elseif (isset($todayAttendance->time_in))
-                    {{-- Sudah Absen Masuk -> Tombol Berubah Menjadi Absen Pulang --}}
+                    {{-- Sudah Absen Masuk -> Tombol Absen Pulang (Gradien Biru) --}}
                     <button @click="openScanModal(true)"
-                        class="inline-flex flex-col items-center justify-center w-28 h-28 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-full shadow-lg shadow-blue-600/20 border-4 border-blue-100 transition duration-200 cursor-pointer">
+                        class="inline-flex flex-col items-center justify-center w-28 h-28 bg-gradient-to-r from-sky-500 to-blue-700 hover:from-sky-600 hover:to-blue-800 active:scale-95 text-white rounded-full shadow-lg shadow-blue-600/30 border-4 border-sky-100 transition duration-200 cursor-pointer">
                         <i class="fas fa-sign-out-alt text-2xl mb-1"></i>
                         <span class="text-[10px] font-bold uppercase tracking-wider">Absen Pulang</span>
                     </button>
                     <p class="text-xs text-slate-400">Klik untuk selfie & verifikasi lokasi pulang</p>
                 @else
-                    {{-- Belum Absen Masuk -> Tombol Scan Barcode --}}
+                    {{-- Belum Absen Masuk -> Tombol Scan Barcode (Gradien Biru) --}}
                     <button @click="openScanModal(false)"
-                        class="inline-flex flex-col items-center justify-center w-28 h-28 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-full shadow-lg shadow-emerald-600/20 border-4 border-emerald-100 transition duration-200 cursor-pointer">
+                        class="inline-flex flex-col items-center justify-center w-28 h-28 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 active:scale-95 text-white rounded-full shadow-lg shadow-sky-500/30 border-4 border-sky-100 transition duration-200 cursor-pointer">
                         <i class="fas fa-qrcode text-2xl mb-1"></i>
                         <span class="text-[10px] font-bold uppercase tracking-wider">Scan Barcode</span>
                     </button>
@@ -85,7 +88,7 @@
 
                 {{-- TOMBOL AJUKAN IZIN --}}
                 <a href="{{ route('guru.izin') }}"
-                    class="w-full mt-2 py-2.5 px-4 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition">
+                    class="w-full mt-2 py-2.5 px-4 bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition">
                     <i class="fas fa-envelope-open-text text-sm"></i>
                     <span>Ajukan Izin / Sakit</span>
                 </a>
@@ -104,7 +107,7 @@
                     <div class="mt-4 flex items-center justify-between">
                         @if (isset($todayAttendance))
                             <span class="px-3 py-1 rounded-full text-xs font-bold
-                                {{ $todayAttendance->status === 'hadir' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : '' }}
+                                {{ $todayAttendance->status === 'hadir' ? 'bg-sky-50 text-sky-600 border border-sky-100' : '' }}
                                 {{ $todayAttendance->status === 'terlambat' ? 'bg-amber-50 text-amber-600 border border-amber-100' : '' }}
                                 {{ $todayAttendance->status === 'izin' ? 'bg-blue-50 text-blue-600 border border-blue-100' : '' }}">
                                 {{ ucfirst($todayAttendance->status) }}
@@ -166,14 +169,14 @@
             <div class="p-5 border-b border-slate-100 flex items-center justify-between">
                 <h3 class="font-bold text-slate-800">Riwayat Presensi Terakhir</h3>
                 <a href="{{ route('guru.absen_saya') }}"
-                    class="text-xs font-semibold text-emerald-600 hover:underline">Lihat Semua</a>
+                    class="text-xs font-semibold text-sky-600 hover:underline">Lihat Semua</a>
             </div>
 
             <div class="p-4 space-y-3">
                 @forelse($recentAttendances ?? [] as $item)
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60 flex items-center justify-between text-xs">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold shrink-0">
+                            <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center font-bold shrink-0">
                                 <i class="fas fa-check text-base"></i>
                             </div>
                             <div>
@@ -185,7 +188,7 @@
                                 </p>
                             </div>
                         </div>
-                        <span class="text-emerald-600 font-semibold bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-xl">
+                        <span class="text-sky-600 font-semibold bg-sky-50 border border-sky-100 px-3 py-1.5 rounded-xl">
                             {{ ucfirst($item->status) }}
                         </span>
                     </div>
@@ -202,7 +205,7 @@
                 <div class="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 text-center z-10 border border-slate-100">
                     <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
                         <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                            <i class="fas" :class="step === 1 ? 'fa-qrcode text-emerald-600' : 'fa-camera text-emerald-600'"></i>
+                            <i class="fas" :class="step === 1 ? 'fa-qrcode text-sky-600' : 'fa-camera text-sky-600'"></i>
                             <span x-text="step === 1 ? 'Langkah 1: Scan QR Code' : 'Langkah 2: Selfie & Lokasi GPS'"></span>
                         </h3>
                         <button type="button" @click="closeModal()" class="text-slate-400 hover:text-slate-600">
@@ -232,9 +235,9 @@
                             </div>
 
                             <div class="p-3.5 rounded-xl border text-left text-xs flex items-center gap-3"
-                                :class="isLocationReady ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-amber-50 border-amber-200 text-amber-800'">
+                                :class="isLocationReady ? 'bg-sky-50 border-sky-200 text-sky-800' : 'bg-amber-50 border-amber-200 text-amber-800'">
                                 <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-                                    :class="isLocationReady ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'">
+                                    :class="isLocationReady ? 'bg-sky-100 text-sky-600' : 'bg-amber-100 text-amber-600'">
                                     <i class="fas" :class="isLocationReady ? 'fa-location-dot' : 'fa-spinner fa-spin'"></i>
                                 </div>
                                 <div class="flex-1">
@@ -248,14 +251,14 @@
 
                             <div class="pt-2">
                                 <button type="button" x-show="!capturedImage" @click="takeSelfiePhoto()"
-                                    class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold text-xs py-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
+                                    class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 active:scale-95 text-white font-semibold text-xs py-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-md">
                                     <i class="fas fa-camera"></i>
                                     <span>Ambil Foto Selfie</span>
                                 </button>
 
                                 <button type="button" x-show="capturedImage" @click="submitAttendanceForm()"
                                     :disabled="!isLocationReady"
-                                    :class="isLocationReady ? 'bg-emerald-600 hover:bg-emerald-700 active:scale-95 cursor-pointer' : 'bg-slate-300 cursor-not-allowed'"
+                                    :class="isLocationReady ? 'bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 active:scale-95 cursor-pointer shadow-md' : 'bg-slate-300 cursor-not-allowed'"
                                     class="w-full text-white font-semibold text-xs py-3 rounded-xl transition flex items-center justify-center gap-2">
                                     <i class="fas fa-paper-plane"></i>
                                     <span>Kirim Presensi Sekarang</span>
@@ -283,7 +286,7 @@
 
                     {{-- Icon Notifikasi Dinamis --}}
                     <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-4 text-2xl"
-                        :class="isNoticeSuccess ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'">
+                        :class="isNoticeSuccess ? 'bg-sky-100 text-sky-600' : 'bg-amber-100 text-amber-600'">
                         <i class="fas" :class="isNoticeSuccess ? 'fa-check-circle' : 'fa-exclamation-triangle'"></i>
                     </div>
 
@@ -291,7 +294,7 @@
                     <p class="text-xs text-slate-500 mb-6 leading-relaxed" x-text="noticeMessage"></p>
 
                     <button type="button" @click="closeNoticeModal()"
-                        class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold text-xs py-3 rounded-xl transition cursor-pointer">
+                        class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 active:scale-95 text-white font-semibold text-xs py-3 rounded-xl transition cursor-pointer shadow-md">
                         Mengerti
                     </button>
                 </div>
@@ -343,7 +346,7 @@
                     this.isLocationReady = false;
 
                     if (isPulang) {
-                        // JIKA ABSEN PULANG: Bypass Langkah 1 (Barcode) & Langsung ke Langkah 2 (Selfie & GPS)
+                        // JIKA ABSEN PULANG: Bypass Langkah 1 & Langsung ke Langkah 2 (Selfie & GPS)
                         this.step = 2;
                         this.$nextTick(() => {
                             this.startSelfieCamera();
@@ -501,7 +504,6 @@
                         if (data.success) {
                             this.openNoticeModal("Presensi Berhasil", data.message, true);
                         } else {
-                            // Gunakan judul dinamis atau "Gagal Presensi" agar akurat
                             const modalTitle = data.title || "Gagal Presensi";
                             this.openNoticeModal(modalTitle, data.message, false);
                         }

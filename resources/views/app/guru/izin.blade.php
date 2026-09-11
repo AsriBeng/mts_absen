@@ -20,7 +20,7 @@
                 <h3 class="font-bold text-slate-800 text-lg">Form Surat Izin / Sakit</h3>
                 <p class="text-xs text-slate-400 mt-0.5">Isi formulir berikut untuk mengajukan tidak hadir hari ini.</p>
             </div>
-            <span class="text-xs bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full border border-emerald-100">
+            <span class="text-xs bg-blue-50 text-blue-700 font-bold px-3 py-1 rounded-full border border-blue-100">
                 {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}
             </span>
         </div>
@@ -35,7 +35,7 @@
                 </label>
                 <textarea name="keterangan" rows="4" required
                     placeholder="Tuliskan alasan izin/sakit secara rinci (misal: Sakit demam tinggi, Izin keperluan keluarga mendesak)..."
-                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"></textarea>
+                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
                 @error('keterangan')
                     <p class="text-rose-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
@@ -47,7 +47,7 @@
                     Foto Bukti (Surat Dokter / Dokumen Pendukung) <span class="text-rose-500">*</span>
                 </label>
                 <input type="file" name="bukti" accept="image/*" required
-                    class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer border border-slate-200 rounded-xl p-1 bg-slate-50">
+                    class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer border border-slate-200 rounded-xl p-1 bg-slate-50">
                 <p class="text-[11px] text-slate-400 mt-1">Format gambar: JPG, PNG, JPEG (Maksimal 2MB).</p>
                 @error('bukti')
                     <p class="text-rose-500 text-xs mt-1">{{ $message }}</p>
@@ -61,7 +61,7 @@
                     Batal
                 </a>
                 <button type="submit"
-                    class="w-1/2 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+                    class="w-1/2 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
                     <i class="fas fa-paper-plane"></i>
                     <span>Kirim Pengajuan Izin</span>
                 </button>
