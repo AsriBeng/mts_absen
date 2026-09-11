@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Aplikasi Presensi') - MA Al-Huda</title>
+    <title>@yield('title', 'Aplikasi Presensi') - MTS Al-Huda</title>
 
     {{-- Tailwind CSS & FontAwesome --}}
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,7 +14,7 @@
     {{-- Alpine.js --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-screen flex flex-col"
+<body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col"
       x-data="{
           sidebarMinimized: window.innerWidth >= 768 && window.innerWidth < 1024,
           mobileSidebarOpen: false
@@ -59,17 +59,17 @@
         }
     @endphp
 
-    {{-- HEADER UTAMA --}}
-    <header class="h-20 bg-emerald-900 text-white px-4 sm:px-6 flex items-center justify-between border-b border-emerald-950 shadow-md sticky top-0 z-30 shrink-0">
+    {{-- HEADER UTAMA (BIRU SANGAT GELAP / NAVY) --}}
+    <header class="h-20 bg-slate-900 text-white px-4 sm:px-6 flex items-center justify-between border-b border-slate-800 shadow-lg sticky top-0 z-30 shrink-0">
 
         {{-- Sisi Kiri Header: Logo + Instansi + Toggle + Title --}}
         <div class="flex items-center gap-3 sm:gap-4">
             {{-- Logo & Nama Instansi --}}
-            <div class="flex items-center gap-3 pr-2 border-r border-emerald-800/80">
-                <img src="{{ asset('image/logo.png') }}" alt="Logo MA Al-Huda" class="w-10 h-10 object-contain shrink-0 rounded-lg bg-white/10 p-1">
+            <div class="flex items-center gap-3 pr-2 border-r border-slate-800">
+                <img src="{{ asset('image/logo.png') }}" alt="Logo MTS Al-Huda" class="w-10 h-10 object-contain shrink-0 rounded-lg bg-blue-950/60 p-1 border border-blue-900/50">
                 <div class="hidden sm:block">
-                    <h1 class="font-bold text-sm text-white leading-tight">MA Al-Huda</h1>
-                    <p class="text-[11px] text-emerald-300 capitalize font-medium tracking-wider">
+                    <h1 class="font-bold text-sm text-white leading-tight">MTS Al-Huda</h1>
+                    <p class="text-[11px] text-blue-400 capitalize font-medium tracking-wider">
                         {{ $authUser->role->name ?? 'User' }} Panel
                     </p>
                 </div>
@@ -77,7 +77,7 @@
 
             {{-- Tombol Toggle Sidebar --}}
             <button @click="if (window.innerWidth < 768) { mobileSidebarOpen = !mobileSidebarOpen } else { sidebarMinimized = !sidebarMinimized }"
-                    class="p-2 rounded-xl text-emerald-200 hover:bg-emerald-800 hover:text-white transition outline-none"
+                    class="p-2 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition outline-none"
                     title="Toggle Sidebar">
                 <i class="fas fa-bars text-lg"></i>
             </button>
@@ -94,14 +94,14 @@
             {{-- Kartu Profil (Trigger Dropdown) --}}
             <button @click="profileDropdownOpen = !profileDropdownOpen"
                     @click.away="profileDropdownOpen = false"
-                    class="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-2xl border border-emerald-700/50 transition focus:outline-none cursor-pointer">
+                    class="flex items-center gap-3 bg-slate-800/80 hover:bg-slate-800 px-3 py-1.5 rounded-2xl border border-slate-700/80 transition focus:outline-none cursor-pointer shadow-sm">
 
                 {{-- Role / Jabatan & Nama Lengkap User --}}
                 <div class="text-right hidden sm:block">
                     <p class="text-xs font-bold text-white leading-tight mt-0.5">
                         {{ $headerDisplayName }}
                     </p>
-                    <p class="text-[11px] text-emerald-200 font-medium capitalize leading-none">
+                    <p class="text-[11px] text-blue-400 font-medium capitalize leading-none">
                         {{ $authUser->role->name ?? 'Guru' }}
                     </p>
                 </div>
@@ -109,7 +109,7 @@
                 {{-- Foto User / Avatar Dinamis --}}
                 <img src="{{ $avatarUrl }}"
                      alt="User Avatar"
-                     class="w-9 h-9 rounded-xl border border-emerald-400 object-cover bg-white p-0.5 shadow-sm shrink-0">
+                     class="w-9 h-9 rounded-xl border border-blue-500/50 object-cover bg-slate-900 p-0.5 shadow-sm shrink-0">
             </button>
 
             {{-- DROPDOWN MENU PROFIL --}}
@@ -120,7 +120,7 @@
                  x-transition:leave="transition ease-in duration-100"
                  x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
                  x-transition:leave-end="transform opacity-0 scale-95 -translate-y-2"
-                 class="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 text-slate-700"
+                 class="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 text-slate-700"
                  style="display: none;">
 
                 @php
@@ -129,13 +129,13 @@
                 @endphp
 
                 {{-- Item Profil --}}
-                <a href="{{ $profileRoute }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium hover:bg-slate-50 hover:text-emerald-600 transition">
+                <a href="{{ $profileRoute }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium hover:bg-blue-50 hover:text-blue-700 transition">
                     <i class="far fa-user text-base w-5 text-center text-slate-400"></i>
                     <span>Profil</span>
                 </a>
 
                 {{-- Item Pengaturan --}}
-                <a href="{{ $settingRoute }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium hover:bg-slate-50 hover:text-emerald-600 transition">
+                <a href="{{ $settingRoute }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium hover:bg-blue-50 hover:text-blue-700 transition">
                     <i class="fas fa-cog text-base w-5 text-center text-slate-400"></i>
                     <span>Pengaturan</span>
                 </a>
@@ -158,14 +158,14 @@
     {{-- KONTEN UTAMA + SIDEBAR CONTAINER --}}
     <div class="flex-1 flex overflow-hidden">
 
-        {{-- SIDEBAR DESKTOP & TABLET --}}
-        <aside class="hidden md:flex flex-col bg-emerald-950 text-white shrink-0 transition-all duration-300 border-r border-emerald-900"
+        {{-- SIDEBAR DESKTOP & TABLET (BIRU PEKAT / DARK NAVY) --}}
+        <aside class="hidden md:flex flex-col bg-slate-950 text-slate-300 shrink-0 transition-all duration-300 border-r border-slate-900"
                :class="sidebarMinimized ? 'w-20' : 'w-64'">
-            <div class="flex-1 overflow-y-auto py-2">
+            <div class="flex-1 overflow-y-auto py-3">
                 @include('layouts.menu')
             </div>
-            <div class="p-4 border-t border-emerald-900/80 text-center text-xs text-emerald-400" x-show="!sidebarMinimized">
-                &copy; {{ date('Y') }} MA Al-Huda
+            <div class="p-4 border-t border-slate-900 text-center text-xs text-slate-500 font-medium" x-show="!sidebarMinimized">
+                &copy; {{ date('Y') }} MTS Al-Huda
             </div>
         </aside>
 
@@ -179,9 +179,9 @@
                  x-transition:leave-start="opacity-100"
                  x-transition:leave-end="opacity-0"
                  @click="mobileSidebarOpen = false"
-                 class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+                 class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm"></div>
 
-            <div class="fixed inset-y-0 left-0 max-w-xs w-full bg-emerald-950 text-white shadow-2xl flex flex-col justify-between"
+            <div class="fixed inset-y-0 left-0 max-w-xs w-full bg-slate-950 text-slate-300 shadow-2xl flex flex-col justify-between border-r border-slate-900"
                  x-show="mobileSidebarOpen"
                  x-transition:enter="transform transition ease-in-out duration-300"
                  x-transition:enter-start="-translate-x-full"
@@ -191,12 +191,12 @@
                  x-transition:leave-end="-translate-x-full">
 
                 <div>
-                    <div class="h-20 px-6 bg-emerald-900 flex items-center justify-between border-b border-emerald-800">
+                    <div class="h-20 px-6 bg-slate-900 flex items-center justify-between border-b border-slate-800">
                         <div class="flex items-center gap-3">
                             <img src="{{ asset('image/logo.png') }}" alt="Logo" class="w-8 h-8 object-contain">
-                            <span class="font-bold text-sm text-white">MA Al-Huda</span>
+                            <span class="font-bold text-sm text-white">MTS Al-Huda</span>
                         </div>
-                        <button @click="mobileSidebarOpen = false" class="text-emerald-300 hover:text-white">
+                        <button @click="mobileSidebarOpen = false" class="text-slate-400 hover:text-white">
                             <i class="fas fa-times text-lg"></i>
                         </button>
                     </div>
@@ -206,14 +206,14 @@
                     </div>
                 </div>
 
-                <div class="p-4 border-t border-emerald-900 text-center text-xs text-emerald-400">
-                    &copy; {{ date('Y') }} MA Al-Huda
+                <div class="p-4 border-t border-slate-900 text-center text-xs text-slate-500 font-medium">
+                    &copy; {{ date('Y') }} MTS Al-Huda
                 </div>
             </div>
         </div>
 
         {{-- AREA CONTENT --}}
-        <main class="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-50">
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-100">
             @yield('content')
         </main>
     </div>
