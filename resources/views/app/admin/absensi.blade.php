@@ -14,18 +14,22 @@
             </div>
         @endif
 
-        {{-- Banner Utama & Tombol Barcode --}}
-        <div class="bg-emerald-900 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>
-                <h3 class="text-xl font-bold">Papan QR Code Absensi Kantor</h3>
-                <p class="text-xs text-emerald-200 mt-1">Tampilkan QR Code ini di papan / monitor kantor agar guru dapat melakukan presensi.</p>
+        {{-- Banner Utama & Tombol Barcode (Gradien Biru Muda ke Biru Gelap) --}}
+        <div class="bg-gradient-to-r from-sky-500 via-blue-700 to-slate-900 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row items-center justify-between gap-4 relative overflow-hidden">
+            <div class="relative z-10">
+                <h3 class="text-xl font-bold text-white">Papan QR Code Absensi Kantor</h3>
+                <p class="text-xs text-sky-100 mt-1">Tampilkan QR Code ini di papan / monitor kantor agar guru dapat melakukan presensi.</p>
             </div>
 
             <button @click="showBarcodeModal = true"
-                class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm px-5 py-3 rounded-xl shadow-lg shadow-emerald-950/30 flex items-center gap-2 transition shrink-0 cursor-pointer">
-                <i class="fas fa-qrcode text-lg"></i>
+                class="relative z-10 bg-sky-400/20 hover:bg-sky-400/30 text-white border border-sky-300/40 backdrop-blur-md font-semibold text-sm px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 transition shrink-0 cursor-pointer">
+                <i class="fas fa-qrcode text-lg text-sky-200"></i>
                 <span>Buka Barcode Absensi</span>
             </button>
+
+            {{-- Ornament Blur Effect --}}
+            <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-sky-400/15 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -left-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
         </div>
 
         {{-- Filter Berdasarkan Tanggal & Tabel Absensi --}}
@@ -169,7 +173,7 @@
                     {{-- Display QR Code --}}
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 inline-block mb-3">
                         @php
-                            $code = $activeKey->key_code ?? 'KNT-ALHUDA-DEFAULT';
+                            $code = $activeKey->key_code ?? 'KMT-ALHUDA-DEFAULT';
                             $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=' . urlencode($code);
                         @endphp
                         <img id="qrImage" src="{{ $qrUrl }}" alt="QR Code Absensi"
