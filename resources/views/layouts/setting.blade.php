@@ -9,13 +9,13 @@
         {{-- Alert Notifikasi Success --}}
         @if (session('success'))
             <div
-                class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 p-4 rounded-xl shadow-sm flex justify-between items-center text-sm">
+                class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 rounded-xl shadow-sm flex justify-between items-center text-sm">
                 <div class="flex items-center gap-2">
-                    <i class="fas fa-check-circle text-emerald-500"></i>
+                    <i class="fas fa-check-circle text-blue-500"></i>
                     <span>{{ session('success') }}</span>
                 </div>
                 <button onclick="this.parentElement.remove()"
-                    class="text-emerald-500 hover:text-emerald-700 font-bold">&times;</button>
+                    class="text-blue-500 hover:text-blue-700 font-bold">&times;</button>
             </div>
         @endif
 
@@ -40,7 +40,7 @@
 
                 <div class="border-b border-slate-100 pb-4">
                     <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                        <i class="fas fa-key text-emerald-600"></i>
+                        <i class="fas fa-key text-blue-600"></i>
                         <span>Perbarui Kata Sandi Akun</span>
                     </h3>
                     <p class="text-xs text-slate-400 mt-0.5">
@@ -69,7 +69,7 @@
                             </span>
                             <input :type="showCurrent ? 'text' : 'password'" name="current_password" required
                                 placeholder="Masukkan password lama Anda"
-                                class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                             <button type="button" @click="showCurrent = !showCurrent"
                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
                                 <i class="fas" :class="showCurrent ? 'fa-eye-slash' : 'fa-eye'"></i>
@@ -88,7 +88,7 @@
                             </span>
                             <input :type="showNew ? 'text' : 'password'" name="password" required
                                 placeholder="Minimal 8 karakter kombinasi"
-                                class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                             <button type="button" @click="showNew = !showNew"
                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
                                 <i class="fas" :class="showNew ? 'fa-eye-slash' : 'fa-eye'"></i>
@@ -107,7 +107,7 @@
                             </span>
                             <input :type="showConfirm ? 'text' : 'password'" name="password_confirmation" required
                                 placeholder="Ulangi password baru Anda"
-                                class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                             <button type="button" @click="showConfirm = !showConfirm"
                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
                                 <i class="fas" :class="showConfirm ? 'fa-eye-slash' : 'fa-eye'"></i>
@@ -118,7 +118,7 @@
                     {{-- Tombol Simpan --}}
                     <div class="pt-2 flex items-center justify-end">
                         <button type="submit"
-                            class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold text-xs py-3 px-6 rounded-xl shadow-sm transition flex items-center gap-2 cursor-pointer">
+                            class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-semibold text-xs py-3 px-6 rounded-xl shadow-sm transition flex items-center gap-2 cursor-pointer">
                             <i class="fas fa-save"></i>
                             <span>Simpan Password Baru</span>
                         </button>
@@ -131,26 +131,26 @@
 
                 {{-- Kartu Standar Kebijakan Password --}}
                 <div class="bg-slate-900 text-white rounded-2xl p-5 shadow-sm space-y-4">
-                    <h4 class="font-bold text-sm border-b border-slate-800 pb-3 flex items-center gap-2 text-emerald-400">
+                    <h4 class="font-bold text-sm border-b border-slate-800 pb-3 flex items-center gap-2 text-blue-400">
                         <i class="fas fa-user-shield"></i>
                         <span>Kebijakan Sandi/Password</span>
                     </h4>
 
                     <ul class="space-y-2.5 text-xs text-slate-300">
                         <li class="flex items-start gap-2.5">
-                            <i class="fas fa-check-circle text-emerald-400 mt-0.5"></i>
+                            <i class="fas fa-check-circle text-blue-400 mt-0.5"></i>
                             <span>Panjang sandi **minimal 8 karakter**.</span>
                         </li>
                         <li class="flex items-start gap-2.5">
-                            <i class="fas fa-check-circle text-emerald-400 mt-0.5"></i>
+                            <i class="fas fa-check-circle text-blue-400 mt-0.5"></i>
                             <span>Mengandung kombinasi **huruf besar, huruf kecil, dan angka**.</span>
                         </li>
                         <li class="flex items-start gap-2.5">
-                            <i class="fas fa-check-circle text-emerald-400 mt-0.5"></i>
+                            <i class="fas fa-check-circle text-blue-400 mt-0.5"></i>
                             <span>Tidak menggunakan tanggal lahir atau kata acak umum.</span>
                         </li>
                         <li class="flex items-start gap-2.5">
-                            <i class="fas fa-check-circle text-emerald-400 mt-0.5"></i>
+                            <i class="fas fa-check-circle text-blue-400 mt-0.5"></i>
                             <span>Dilarang membagikan password akun presensi kepada siapapun.</span>
                         </li>
                     </ul>
@@ -159,7 +159,7 @@
                 {{-- Kartu Catatan Bantuan --}}
                 <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-2 text-xs">
                     <h5 class="font-bold text-slate-800 text-xs flex items-center gap-2">
-                        <i class="fas fa-headset text-emerald-600"></i>
+                        <i class="fas fa-headset text-blue-600"></i>
                         <span>Butuh Bantuan Akun?</span>
                     </h5>
                     <p class="text-slate-500 leading-relaxed">

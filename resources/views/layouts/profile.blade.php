@@ -33,12 +33,12 @@
 
         {{-- Alert Notifikasi --}}
         @if (session('success'))
-            <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 p-4 rounded-xl shadow-sm flex justify-between items-center text-sm">
+            <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 rounded-xl shadow-sm flex justify-between items-center text-sm">
                 <div class="flex items-center gap-2">
-                    <i class="fas fa-check-circle text-emerald-500"></i>
+                    <i class="fas fa-check-circle text-blue-500"></i>
                     <span>{{ session('success') }}</span>
                 </div>
-                <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 font-bold">&times;</button>
+                <button onclick="this.parentElement.remove()" class="text-blue-500 hover:text-blue-700 font-bold">&times;</button>
             </div>
         @endif
 
@@ -55,25 +55,25 @@
             </div>
         @endif
 
-        {{-- Banner Utama Profil --}}
-        <div class="bg-gradient-to-r from-emerald-800 to-emerald-600 rounded-2xl p-6 text-white shadow-md relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
+        {{-- Banner Utama Profil (Gradien Biru Muda ke Biru Gelap) --}}
+        <div class="bg-gradient-to-r from-sky-500 via-blue-700 to-slate-900 rounded-2xl p-6 text-white shadow-md relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="flex flex-col sm:flex-row items-center gap-5 z-10 text-center sm:text-left">
 
                 {{-- Foto Profile / Logo Instansi --}}
                 <div class="relative shrink-0">
                     @if ($isAdmin)
-                        <img src="{{ asset('image/logo.png') }}" class="w-24 h-24 rounded-2xl border-2 border-emerald-300/60 object-cover bg-white p-1 shadow-xl">
+                        <img src="{{ asset('image/logo.png') }}" class="w-24 h-24 rounded-2xl border-2 border-sky-300/60 object-cover bg-white p-1 shadow-xl">
                     @else
                         @if ($guruData && $guruData->foto_profile && Storage::disk('public')->exists($guruData->foto_profile))
-                            <img src="{{ asset('storage/' . $guruData->foto_profile) }}" class="w-24 h-24 rounded-2xl border-2 border-emerald-300/60 object-cover bg-slate-100 shadow-xl">
+                            <img src="{{ asset('storage/' . $guruData->foto_profile) }}" class="w-24 h-24 rounded-2xl border-2 border-sky-300/60 object-cover bg-slate-100 shadow-xl">
                         @else
-                            <div class="w-24 h-24 rounded-2xl bg-white/10 backdrop-blur-md border-2 border-emerald-300/60 flex items-center justify-center text-4xl font-extrabold uppercase shadow-xl text-emerald-100">
+                            <div class="w-24 h-24 rounded-2xl bg-white/10 backdrop-blur-md border-2 border-sky-300/60 flex items-center justify-center text-4xl font-extrabold uppercase shadow-xl text-sky-100">
                                 {{ substr($authUser->name ?? 'U', 0, 1) }}
                             </div>
                         @endif
                     @endif
 
-                    <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-400 border-2 border-emerald-900 rounded-full flex items-center justify-center text-[10px] text-emerald-950 font-bold" title="Status Aktif">
+                    <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-sky-400 border-2 border-slate-900 rounded-full flex items-center justify-center text-[10px] text-slate-950 font-bold" title="Status Aktif">
                         <i class="fas fa-check"></i>
                     </div>
                 </div>
@@ -81,23 +81,23 @@
                 <div>
                     {{-- Nama Lengkap + Gelar --}}
                     <div class="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
-                        <h3 class="text-2xl font-bold tracking-tight">{{ $formattedName }}</h3>
-                        <span class="bg-emerald-900/50 backdrop-blur-md px-3 py-0.5 rounded-full uppercase tracking-wider font-semibold text-[10px] border border-emerald-400/40 text-emerald-200">
+                        <h3 class="text-2xl font-bold tracking-tight text-white">{{ $formattedName }}</h3>
+                        <span class="bg-slate-950/40 backdrop-blur-md px-3 py-0.5 rounded-full uppercase tracking-wider font-semibold text-[10px] border border-sky-300/30 text-sky-200">
                             {{ $authUser->role->name ?? 'User' }}
                         </span>
                     </div>
 
                     {{-- Username dibawah Nama Lengkap --}}
-                    <p class="text-xs text-emerald-200/90 font-medium mt-0.5">
-                        <i class="fas fa-user-circle text-emerald-300 mr-1"></i> Username: <span class="font-mono">{{ $authUser->name }}</span>
+                    <p class="text-xs text-sky-100/90 font-medium mt-0.5">
+                        <i class="fas fa-user-circle text-sky-300 mr-1"></i> Username: <span class="font-mono">{{ $authUser->name }}</span>
                     </p>
 
-                    <p class="text-xs text-emerald-100/80 mt-1 flex items-center justify-center sm:justify-start gap-2 flex-wrap">
+                    <p class="text-xs text-sky-100/80 mt-1 flex items-center justify-center sm:justify-start gap-2 flex-wrap">
                         @if (!$isAdmin)
-                            <span><i class="fas fa-id-badge text-emerald-300"></i> NIP: <strong class="font-mono">{{ $guruData->nip ?? '-' }}</strong></span>
+                            <span><i class="fas fa-id-badge text-sky-300"></i> NIP: <strong class="font-mono">{{ $guruData->nip ?? '-' }}</strong></span>
                             <span class="opacity-40">•</span>
                         @endif
-                        <span><i class="fas fa-envelope text-emerald-300"></i> {{ $authUser->email }}</span>
+                        <span><i class="fas fa-envelope text-sky-300"></i> {{ $authUser->email }}</span>
                     </p>
                 </div>
             </div>
@@ -105,13 +105,15 @@
             {{-- Tombol Edit Profil Guru --}}
             @if (!$isAdmin)
                 <button @click="showEditModal = true"
-                    class="z-10 bg-white/15 hover:bg-white/25 active:scale-95 text-white font-semibold text-xs py-3 px-5 rounded-xl border border-white/20 backdrop-blur-md shadow-sm transition flex items-center gap-2 shrink-0 cursor-pointer">
-                    <i class="fas fa-user-edit text-sm"></i>
+                    class="z-10 bg-sky-400/20 hover:bg-sky-400/30 active:scale-95 text-white font-semibold text-xs py-3 px-5 rounded-xl border border-sky-300/40 backdrop-blur-md shadow-sm transition flex items-center gap-2 shrink-0 cursor-pointer">
+                    <i class="fas fa-user-edit text-sm text-sky-200"></i>
                     <span>Edit Profil</span>
                 </button>
             @endif
 
-            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
+            {{-- Ornament Blur Effect --}}
+            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-sky-400/15 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -left-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
         </div>
 
         {{-- Detail Informasi Profil --}}
@@ -122,7 +124,7 @@
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
                     <h4 class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-3 flex items-center justify-between">
                         <span>Informasi Akun</span>
-                        <i class="fas fa-shield-alt text-emerald-600"></i>
+                        <i class="fas fa-shield-alt text-blue-600"></i>
                     </h4>
 
                     <div class="space-y-3 text-xs">
@@ -147,8 +149,8 @@
 
                         <div>
                             <span class="text-slate-400 font-medium uppercase tracking-wider block text-[10px]">Status Akun</span>
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-600 border border-emerald-100 mt-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Aktif
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-600 border border-blue-100 mt-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Aktif
                             </span>
                         </div>
                     </div>
@@ -162,7 +164,7 @@
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                             <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                                <i class="fas fa-building text-emerald-600"></i>
+                                <i class="fas fa-building text-blue-600"></i>
                                 <span>Informasi Instansi Sistem</span>
                             </h4>
                             <span class="text-xs text-slate-400">MA Al-Huda</span>
@@ -181,7 +183,7 @@
 
                             <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 sm:col-span-2">
                                 <span class="text-slate-400 uppercase font-semibold text-[10px] tracking-wider block">Hak Akses Sistem</span>
-                                <p class="font-bold text-emerald-600 text-xs mt-0.5">Akses Penuh Kelola Absensi, Users Setting, Rekap, dan Konfigurasi Hari Kerja.</p>
+                                <p class="font-bold text-blue-600 text-xs mt-0.5">Akses Penuh Kelola Absensi, Users Setting, Rekap, dan Konfigurasi Hari Kerja.</p>
                             </div>
                         </div>
                     </div>
@@ -190,7 +192,7 @@
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                             <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                                <i class="fas fa-address-card text-emerald-600"></i>
+                                <i class="fas fa-address-card text-blue-600"></i>
                                 <span>Biodata Lengkap Guru</span>
                             </h4>
                             <span class="text-xs text-slate-400">MA Al-Huda</span>
@@ -269,7 +271,7 @@
 
                         <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-5">
                             <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                                <i class="fas fa-user-edit text-emerald-600"></i>
+                                <i class="fas fa-user-edit text-blue-600"></i>
                                 <span>Edit Biodata Guru</span>
                             </h3>
                             <button @click="showEditModal = false" class="text-slate-400 hover:text-slate-600 transition">
@@ -285,7 +287,7 @@
                             <div>
                                 <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Foto Profile</label>
                                 <input type="file" name="foto_profile" accept="image/*"
-                                    class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer border border-slate-200 rounded-xl p-1 bg-slate-50">
+                                    class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer border border-slate-200 rounded-xl p-1 bg-slate-50">
                             </div>
 
                             {{-- Input Gelar Depan, Nama Lengkap, Gelar Belakang --}}
@@ -293,13 +295,13 @@
                                 <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Lengkap & Gelar</label>
                                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
                                     <input type="text" name="gelar_depan" placeholder="Gelar Depan (Dr.)" value="{{ old('gelar_depan', $guruData->gelar_depan ?? '') }}"
-                                        class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                        class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                                     <input type="text" name="nama_lengkap" placeholder="Nama Lengkap" value="{{ old('nama_lengkap', $guruData->nama_lengkap ?? '') }}" required
-                                        class="sm:col-span-2 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                        class="sm:col-span-2 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                                     <input type="text" name="gelar_belakang" placeholder="Gelar Belakang (S.Pd)" value="{{ old('gelar_belakang', $guruData->gelar_belakang ?? '') }}"
-                                        class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                        class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 </div>
                             </div>
 
@@ -308,12 +310,12 @@
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">NIK (KTP)</label>
                                     <input type="text" name="nik" maxlength="16" value="{{ old('nik', $guruData->nik ?? '') }}"
-                                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">NIP / NUPTK</label>
                                     <input type="text" name="nip" value="{{ old('nip', $guruData->nip ?? '') }}"
-                                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                                 </div>
                             </div>
 
@@ -322,12 +324,12 @@
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tempat Lahir</label>
                                     <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir', $guruData->tempat_lahir ?? '') }}"
-                                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tanggal Lahir</label>
                                     <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', $guruData->tanggal_lahir ?? '') }}"
-                                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                                 </div>
                             </div>
 
@@ -335,7 +337,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Jenis Kelamin</label>
-                                    <select name="jenis_kelamin" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                    <select name="jenis_kelamin" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                                         <option value="">-- Pilih --</option>
                                         <option value="L" {{ (old('jenis_kelamin', $guruData->jenis_kelamin ?? '') === 'L') ? 'selected' : '' }}>Laki-Laki</option>
                                         <option value="P" {{ (old('jenis_kelamin', $guruData->jenis_kelamin ?? '') === 'P') ? 'selected' : '' }}>Perempuan</option>
@@ -343,7 +345,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Agama</label>
-                                    <select name="agama" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                    <select name="agama" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                                         @foreach(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu'] as $agm)
                                             <option value="{{ $agm }}" {{ (old('agama', $guruData->agama ?? 'Islam') === $agm) ? 'selected' : '' }}>{{ $agm }}</option>
                                         @endforeach
@@ -356,12 +358,12 @@
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Alamat Email</label>
                                     <input type="email" name="email" value="{{ old('email', $authUser->email) }}" required
-                                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">No. Handphone / WA</label>
                                     <input type="text" name="no_hp" value="{{ old('no_hp', $guruData->no_hp ?? '') }}"
-                                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                                 </div>
                             </div>
 
@@ -369,7 +371,7 @@
                             <div>
                                 <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Alamat Lengkap</label>
                                 <textarea name="alamat" rows="2"
-                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition resize-none">{{ old('alamat', $guruData->alamat ?? '') }}</textarea>
+                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition resize-none">{{ old('alamat', $guruData->alamat ?? '') }}</textarea>
                             </div>
 
                             {{-- Tombol Aksi --}}
@@ -379,7 +381,7 @@
                                     Batal
                                 </button>
                                 <button type="submit"
-                                    class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold text-xs rounded-xl shadow-sm transition flex items-center gap-2 cursor-pointer">
+                                    class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-semibold text-xs rounded-xl shadow-sm transition flex items-center gap-2 cursor-pointer">
                                     <i class="fas fa-save"></i>
                                     <span>Simpan Perubahan</span>
                                 </button>
