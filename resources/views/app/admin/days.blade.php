@@ -26,13 +26,13 @@
         <div>
             <h3 class="font-bold text-slate-800 text-base">Aturan Jam Kerja & GPS Per Hari</h3>
             <p class="text-xs text-slate-400 mt-0.5">
-                Total Data: <span class="font-bold text-emerald-600">{{ $totalCount }} / 7</span>
+                Total Data: <span class="font-bold text-blue-600">{{ $totalCount }} / 7</span>
             </p>
         </div>
 
         {{-- Tombol Tambah Hari (Di-disabled jika data sudah >= 7) --}}
         @if($totalCount < 7)
-            <button @click="showAddModal = true" class="w-full sm:w-auto px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl transition shadow-sm flex items-center justify-center gap-2">
+            <button @click="showAddModal = true" class="w-full sm:w-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-800 text-white font-semibold text-sm rounded-xl transition shadow-sm flex items-center justify-center gap-2">
                 <i class="fas fa-plus"></i>
                 <span>Tambah Hari Baru</span>
             </button>

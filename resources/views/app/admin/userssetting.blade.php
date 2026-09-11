@@ -27,7 +27,7 @@
             <h3 class="font-bold text-slate-800 text-base">Daftar Pengguna Sistem</h3>
             <p class="text-xs text-slate-400 mt-0.5">Kelola data akun pengguna, peran (role), dan kata sandi.</p>
         </div>
-        <button @click="showAddModal = true" class="w-full sm:w-auto px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl transition shadow-sm flex items-center justify-center gap-2">
+        <button @click="showAddModal = true" class="w-full sm:w-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-800 text-white font-semibold text-sm rounded-xl transition shadow-sm flex items-center justify-center gap-2">
             <i class="fas fa-user-plus"></i>
             <span>Tambah User Baru</span>
         </button>

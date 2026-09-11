@@ -45,9 +45,9 @@
                 {{-- Form Filter Tanggal --}}
                 <form action="{{ route('admin.absensi') }}" method="GET" class="flex items-center gap-2">
                     <input type="date" name="date" value="{{ $selectedDate }}"
-                        class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <button type="submit"
-                        class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-800 text-white text-xs font-semibold rounded-xl transition flex items-center gap-1.5 cursor-pointer">
                         <i class="fas fa-filter"></i>
                         <span>Filter</span>
                     </button>
@@ -196,7 +196,7 @@
                         {{-- Tombol Download Poster Barcode --}}
                         <button type="button"
                             onclick="downloadPosterBarcode('{{ $qrUrl }}', 'Poster_Absensi_{{ $code }}.png')"
-                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
+                            class="w-full bg-blue-600 hover:bg-blue-800 text-white font-semibold text-xs py-3 px-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
                             <i class="fas fa-download"></i> Download
                         </button>
                     </div>

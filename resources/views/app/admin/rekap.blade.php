@@ -74,7 +74,7 @@
 
             {{-- Tombol Filter & Cetak PDF --}}
             <div class="flex items-center gap-2 w-full lg:w-auto">
-                <button type="submit" class="flex-1 lg:flex-none px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl transition shadow-sm flex items-center justify-center gap-2">
+                <button type="submit" class="flex-1 lg:flex-none px-5 py-2.5 bg-blue-600 hover:bg-blue-800 text-white font-semibold text-sm rounded-xl transition shadow-sm flex items-center justify-center gap-2">
                     <i class="fas fa-filter"></i>
                     <span>Terapkan Filter</span>
                 </button>
@@ -121,7 +121,7 @@
                     @endif
                 </p>
             </div>
-            <span class="text-xs bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full border border-emerald-100">
+            <span class="text-xs bg-emerald-50 text-blue-700 font-bold px-3 py-1 rounded-full border border-emerald-100">
                 Total Record: {{ $attendances->count() }}
             </span>
         </div>
