@@ -7,29 +7,31 @@
     {{-- Tambahkan state x-data untuk kontrol modal preview photo --}}
     <div class="space-y-6" x-data="{ showPhotoModal: false, previewPhotoUrl: '' }">
 
-        {{-- Widget Hari & Jam Digital Real-time --}}
-        <div class="bg-gradient-to-r from-emerald-800 to-emerald-600 rounded-2xl p-6 text-white shadow-sm relative overflow-hidden">
+        {{-- Widget Hari & Jam Digital Real-time (Gradien Biru Muda ke Biru Gelap) --}}
+        <div class="bg-gradient-to-r from-sky-500 via-blue-700 to-slate-900 rounded-2xl p-6 text-white shadow-md relative overflow-hidden">
             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
                 <div>
-                    <p class="text-xs uppercase tracking-wider font-semibold text-emerald-200">
+                    <p class="text-xs uppercase tracking-wider font-semibold text-sky-100">
                         {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y') }}
                     </p>
-                    <h3 class="text-3xl font-extrabold mt-1 tracking-wider">
+                    <h3 class="text-3xl font-extrabold mt-1 tracking-wider text-white">
                         <span id="realtime-clock">{{ date('H:i:s') }}</span>
-                        <span class="text-sm font-normal">WIB</span>
+                        <span class="text-sm font-normal text-sky-100">WIB</span>
                     </h3>
                 </div>
-                <div class="text-xs bg-emerald-900/40 backdrop-blur-md px-4 py-2 rounded-xl border border-emerald-400/30">
-                    <i class="fas fa-info-circle mr-1 text-emerald-300"></i>
+                <div class="text-xs bg-slate-950/40 backdrop-blur-md px-4 py-2 rounded-xl border border-sky-300/30 text-white shadow-inner">
+                    <i class="fas fa-info-circle mr-1 text-sky-300"></i>
                     Status Hari Ini:
                     @if (($todaySetting->status ?? 'masuk') === 'libur')
                         <span class="font-bold text-rose-300">Hari Libur</span>
                     @else
-                        <span class="font-bold text-emerald-200">Jam Kerja Normal</span>
+                        <span class="font-bold text-sky-200">Jam Kerja Normal</span>
                     @endif
                 </div>
             </div>
-            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
+            {{-- Ornament Blur Effect --}}
+            <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-sky-400/20 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -left-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
         </div>
 
         {{-- Card Informasi Aturan Jam Kerja & GPS Kantor Hari Ini --}}
