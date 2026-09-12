@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Presensi MA Al-Huda</title>
+    <title>Login - Presensi MTS Al-Huda</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-linear-to-br from-blue-50 via-slate-50 to-blue-100 flex items-center justify-center min-h-screen p-4">
@@ -14,7 +14,7 @@
             <div class="inline-block p-3 rounded-full bg-blue-50 mb-3 border border-blue-100 shadow-sm">
                 <img src="{{ asset('image/logo.png') }}" alt="Logo MA Al-Huda" class="w-20 h-20 object-contain mx-auto">
             </div>
-            <h1 class="text-2xl font-bold text-slate-800 tracking-tight">MA Al-Huda</h1>
+            <h1 class="text-2xl font-bold text-slate-800 tracking-tight">MTS Al-Huda</h1>
             <p class="text-sm font-medium text-blue-600 mt-0.5">Sistem Presensi Digital</p>
             <p class="text-xs text-slate-400 mt-1">Silakan masuk menggunakan akun Anda</p>
         </div>
