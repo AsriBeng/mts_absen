@@ -19,12 +19,11 @@
 
 ## 📌 Tentang Proyek
 
-**MTS-Absen** hadir untuk memodernisasi pencatatan kehadiran siswa dan staf pengajar. Dirancang dengan antarmuka yang ramah pengguna serta fleksibilitas tinggi, aplikasi ini mempermudah proses pemantauan absensi secara real-time.
+**MTS-Absen** hadir untuk memodernisasi pencatatan kehadiran dan staf pengajar. Dirancang dengan antarmuka yang ramah pengguna serta fleksibilitas tinggi, aplikasi ini mempermudah proses pemantauan absensi secara real-time.
 
 ### ✨ Fitur Utama
 
 - 👨‍🏫 **Absensi Guru & Staf**: Pencatatan jam masuk dan pulang secara akurat.
-- 👨‍🎓 **Absensi Siswa**: Pengelolaan presensi harian per kelas.
 - 📊 **Laporan & Rekapitulasi**: Ekspor rekap kehadiran harian, mingguan, dan bulanan.
 - 🔐 **Manajemen Akses**: Sistem autentikasi dan otorisasi role berbasis keamanan tinggi.
 - 📱 **Desain Responsif**: Otomatis menyesuaikan tampilan di layar HP, tablet, maupun PC.
