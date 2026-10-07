@@ -1,96 +1,114 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+  <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" alt="Laravel Logo" width="350">
 
-## Versi yang Digunakan
+  # 🏫 MTS-Absen
+  ### Aplikasi Absensi Sekolah Berbasis Laravel
 
-- **Laravel**: 13.17
-- **PHP**: 8.3
-- **Composer**: Terbaru (2.x)
-- **Node.js**: Sesuai package.json
+  Sistem manajemen absensi digital yang responsif, aman, dan efisien untuk mendukung operasional Madrasah Tsanawiyah (MTS).
 
-# MTS-Absen - Aplikasi Absensi Sekolah Berbasis Laravel
+  [![PHP Version](https://img.shields.io/badge/PHP-8.3-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+  [![Laravel Version](https://img.shields.io/badge/Laravel-13.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+  [![MySQL](https://img.shields.io/badge/MySQL-Supported-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+  [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-**MTS-Absen** adalah aplikasi absensi siswa dan guru untuk sekolah menengah pertama (MTS) yang dibangun menggunakan framework Laravel. Aplikasi ini dirancang untuk memudahkan proses absensi dengan fitur-fitur modern dan responsif.
+</div>
 
-## Fitur Utama
+---
 
-- **Absensi Guru**: Sistem absensi untuk guru dengan jam masuk dan jam pulang.
-- **Laporan Kehadiran**: Generate laporan absensi harian, mingguan, dan bulanan.
-- **Manajemen Pengguna**: Sistem login dan otorisasi yang aman.
+## 📌 Tentang Proyek
 
-## Persyaratan Sistem
+**MTS-Absen** hadir untuk memodernisasi pencatatan kehadiran siswa dan staf pengajar. Dirancang dengan antarmuka yang ramah pengguna serta fleksibilitas tinggi, aplikasi ini mempermudah proses pemantauan absensi secara real-time.
 
-- **PHP**: ^8.3
-- **Laravel**: ^13.17 (Laravel 13 dengan fitur AI dan boost)
-- **MySQL** atau **SQLite** (disarankan untuk development)
-- **Composer** (untuk manajemen dependensi PHP)
-- **Node.js** dan **npm** (untuk asset management dan build)
-- **Laragon** atau **XAMPP** (untuk pengembangan lokal di Windows)
+### ✨ Fitur Utama
 
-## Cara Clone dan Setup Proyek
+- 👨‍🏫 **Absensi Guru & Staf**: Pencatatan jam masuk dan pulang secara akurat.
+- 👨‍🎓 **Absensi Siswa**: Pengelolaan presensi harian per kelas.
+- 📊 **Laporan & Rekapitulasi**: Ekspor rekap kehadiran harian, mingguan, dan bulanan.
+- 🔐 **Manajemen Akses**: Sistem autentikasi dan otorisasi role berbasis keamanan tinggi.
+- 📱 **Desain Responsif**: Otomatis menyesuaikan tampilan di layar HP, tablet, maupun PC.
 
-1. **Clone Repository**
-   ```bash
-   git clone https://github.com/AsriBeng/mts-absen.git
-   cd mts-absen
-   ```
+---
 
-2. **Instalasi Dependensi PHP**
-   ```bash
-   composer install
-   ```
+## ⚙️ Persyaratan Sistem
 
-3. **Konfigurasi Environment**
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
+Pastikan lingkungan server lokal Anda memenuhi spesifikasi minimum berikut:
 
-4. **Instalasi Node.js Packages**
-   ```bash
-   npm install
-   ```
+| Komponen | Versi Minimum / Catatan |
+| :--- | :--- |
+| **PHP** | `^8.3` |
+| **Framework** | Laravel `13.x` |
+| **Database** | MySQL / MariaDB / SQLite |
+| **Package Manager** | Composer `2.x` & Node.js (`npm`) |
+| **Local Server** | Laragon (Rekomendasi) / XAMPP |
 
-5. **Generate Assets**
-   ```bash
-   npm run build
-   ```
+---
 
-6. **Setup Database**
-   - Untuk development dengan SQLite:
-     ```bash
-     php artisan migrate --seed
-     ```
-   - Atau untuk MySQL (set di `.env`):
-     ```bash
-     php artisan migrate --seed
-     ```
+## 🚀 Panduan Instalasi & Setup
 
-7. **Run Server**
-   ```bash
-   php artisan serve
-   ```
-   Atau dengan Laragon:
-   - Copy proyek ke folder `c:\laragon\www\mts-absen`
-   - Akses melalui browser: `http://localhost/mts-absen/public`
+Ikuti langkah-langkah di bawah ini untuk menjalankan proyek di lingkungan lokal:
 
-## Pengembangan
+### 1. Clone Repository
+<pre><code>git clone https://github.com/AsriBeng/mts-absen.git
+cd mts-absen</code></pre>
 
-- **Testing**: `php artisan test`
-- **Linting**: `php artisan pint`
-- **Watch Development**: `npm run dev`
+### 2. Instalasi Dependensi
+<pre><code># Install paket backend PHP
+composer install
 
-## Pembuat
+# Install paket frontend Node.js
+npm install</code></pre>
 
-**AsriBeng**  
-GitHub: [https://github.com/AsriBeng](https://github.com/AsriBeng)  
-Email: [asrisakbar123@gmail.com](mailto:asrisakbar123@gmail.com)
+### 3. Konfigurasi Environment
+<pre><code># Duplikasi file konfig .env
+cp .env.example .env
 
-Terima kasih atas kepercayaannya menggunakan aplikasi ini. Semoga membantu proses absensi sekolah Anda! 🙏
+# Generate application key
+php artisan key:generate</code></pre>
 
+### 4. Setup Database & Migrasi
+Sesuaikan kredensial database pada file `.env`, lalu jalankan migrasi beserta data awal:
+<pre><code>php artisan migrate --seed</code></pre>
+
+### 5. Build Assets & Jalankan Server
+<pre><code># Build stylesheet & script
+npm run build
+
+# Jalankan server lokal
+php artisan serve</code></pre>
+
+Aplikasi sekarang dapat diakses melalui browser di **`http://127.0.0.1:8000`**.
+
+> 💡 **Pengguna Laragon:** Anda cukup menempatkan folder proyek di `C:\laragon\www\mts-absen` dan mengontrol virtual host bawaan Laragon (`http://mts-absen.test`).
+
+---
+
+## 🛠️ Perintah Pengembangan (Development)
+
+- **Menjalankan Dev Server Frontend (Hot Reload):**
+  <pre><code>npm run dev</code></pre>
+- **Menjalankan Automated Testing:**
+  <pre><code>php artisan test</code></pre>
+- **Merapikan Format Kode (Formatting):**
+  <pre><code>php artisan pint</code></pre>
+
+---
+
+## 👨‍💻 Pengembang
+
+<div align="center">
+
+  **AsriBeng**  
+  *Software Developer & IT Specialist*
+
+  [![GitHub](https://img.shields.io/badge/GitHub-AsriBeng-181717?style=flat-square&logo=github)](https://github.com/AsriBeng)
+  [![Email](https://img.shields.io/badge/Email-asrisakbar123%40gmail.com-D14836?style=flat-square&logo=gmail&logoColor=white)](mailto:asrisakbar123@gmail.com)
+
+</div>
+
+---
+
+<div align="center">
+  <sub>Dibuat dengan ❤️ untuk kemudahan pengelolaan presensi pendidikan.</sub>
+</div>
