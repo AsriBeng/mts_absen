@@ -7,52 +7,95 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# MTS-Absen - Aplikasi Absensi Sekolah Berbasis Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**MTS-Absen** adalah aplikasi absensi siswa dan guru untuk sekolah menengah pertama (MTS) yang dibangun menggunakan framework Laravel. Aplikasi ini dirancang untuk memudahkan proses absensi dengan fitur-fitur modern dan responsif.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Absensi Siswa**: Catat kehadiran siswa secara real-time dengan barcode scanner.
+- **Absensi Guru**: Sistem absensi untuk guru dengan jadwal pelajaran.
+- **Laporan Kehadiran**: Generate laporan absensi harian, mingguan, dan bulanan.
+- **Manajemen Pengguna**: Sistem login dan otorisasi yang aman.
+- **Notifikasi**: Pengingat absensi dan pengumuman.
 
-## Learning Laravel
+## Persyaratan Sistem
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **PHP**: ^8.3
+- **Laravel**: ^13.17 (Laravel 13 dengan fitur AI dan boost)
+- **MySQL** atau **SQLite** (disarankan untuk development)
+- **Composer** (untuk manajemen dependensi PHP)
+- **Node.js** dan **npm** (untuk asset management dan build)
+- **Laragon** atau **XAMPP** (untuk pengembangan lokal di Windows)
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Cara Clone dan Setup Proyek
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/AsriBeng/mts-absen.git
+   cd mts-absen
+   ```
 
-## Agentic Development
+2. **Instalasi Dependensi PHP**
+   ```bash
+   composer install
+   ```
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+3. **Konfigurasi Environment**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-```bash
-composer require laravel/boost --dev
+4. **Instalasi Node.js Packages**
+   ```bash
+   npm install
+   ```
 
-php artisan boost:install
-```
+5. **Generate Assets**
+   ```bash
+   npm run build
+   ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+6. **Setup Database**
+   - Untuk development dengan SQLite:
+     ```bash
+     php artisan migrate --seed
+     ```
+   - Atau untuk MySQL (set di `.env`):
+     ```bash
+     php artisan migrate --seed
+     ```
 
-## Contributing
+7. **Run Server**
+   ```bash
+   php artisan serve
+   ```
+   Atau dengan Laragon:
+   - Copy proyek ke folder `c:\laragon\www\mts-absen`
+   - Akses melalui browser: `http://localhost/mts-absen/public`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Pengembangan
 
-## Code of Conduct
+- **Testing**: `php artisan test`
+- **Linting**: `php artisan pint`
+- **Watch Development**: `npm run dev`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Versi yang Digunakan
 
-## Security Vulnerabilities
+- **Laravel**: 13.17
+- **PHP**: 8.3
+- **Composer**: Terbaru (2.x)
+- **Node.js**: Sesuai package.json
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Pembuat
 
-## License
+**AsriBeng**  
+GitHub: [https://github.com/AsriBeng](https://github.com/AsriBeng)  
+Email: [asribeng@example.com](mailto:asribeng@example.com) (ganti dengan email asli jika ada)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Terima kasih atas kepercayaannya menggunakan aplikasi ini. Semoga membantu proses absensi sekolah Anda! 🙏
+
+## Kontribusi
+
+Buka issue atau pull request jika ada fitur yang ingin ditambahkan atau bug yang ingin diperbaiki.
