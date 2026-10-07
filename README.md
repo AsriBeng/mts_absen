@@ -90,7 +90,7 @@
 
 **AsriBeng**  
 GitHub: [https://github.com/AsriBeng](https://github.com/AsriBeng)  
-Email: [asribeng@rupamedia.my.id](mailto:asribeng@rupamedia.my.id)
+Email: [asrisakbar123@gmail.com](mailto:asrisakbar123@gmail.com)
 
 Terima kasih atas kepercayaannya menggunakan aplikasi ini. Semoga membantu proses absensi sekolah Anda! 🙏
 
