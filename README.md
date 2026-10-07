@@ -7,6 +7,13 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Versi yang Digunakan
+
+- **Laravel**: 13.17
+- **PHP**: 8.3
+- **Composer**: Terbaru (2.x)
+- **Node.js**: Sesuai package.json
+
 # MTS-Absen - Aplikasi Absensi Sekolah Berbasis Laravel
 
 **MTS-Absen** adalah aplikasi absensi siswa dan guru untuk sekolah menengah pertama (MTS) yang dibangun menggunakan framework Laravel. Aplikasi ini dirancang untuk memudahkan proses absensi dengan fitur-fitur modern dan responsif.
@@ -78,13 +85,6 @@
 - **Testing**: `php artisan test`
 - **Linting**: `php artisan pint`
 - **Watch Development**: `npm run dev`
-
-## Versi yang Digunakan
-
-- **Laravel**: 13.17
-- **PHP**: 8.3
-- **Composer**: Terbaru (2.x)
-- **Node.js**: Sesuai package.json
 
 ## Pembuat
 
