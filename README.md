@@ -13,11 +13,9 @@
 
 ## Fitur Utama
 
-- **Absensi Siswa**: Catat kehadiran siswa secara real-time dengan barcode scanner.
-- **Absensi Guru**: Sistem absensi untuk guru dengan jadwal pelajaran.
+- **Absensi Guru**: Sistem absensi untuk guru dengan jam masuk dan jam pulang.
 - **Laporan Kehadiran**: Generate laporan absensi harian, mingguan, dan bulanan.
 - **Manajemen Pengguna**: Sistem login dan otorisasi yang aman.
-- **Notifikasi**: Pengingat absensi dan pengumuman.
 
 ## Persyaratan Sistem
 
@@ -92,10 +90,7 @@
 
 **AsriBeng**  
 GitHub: [https://github.com/AsriBeng](https://github.com/AsriBeng)  
-Email: [asribeng@example.com](mailto:asribeng@example.com) (ganti dengan email asli jika ada)
+Email: [asribeng@rupamedia.my.id](mailto:asribeng@rupamedia.my.id)
 
 Terima kasih atas kepercayaannya menggunakan aplikasi ini. Semoga membantu proses absensi sekolah Anda! 🙏
 
-## Kontribusi
-
-Buka issue atau pull request jika ada fitur yang ingin ditambahkan atau bug yang ingin diperbaiki.
